@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Re:Pitch 팀 역할 분배 v2 (5명 · 14일)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; line-height: 1.6; }
+  .page { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+  h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+  .subtitle { font-size: 14px; color: #888; margin-bottom: 16px; }
+
+  .change-banner { background: #fffbeb; border: 1px solid #fcd34d; border-radius: 10px; padding: 12px 16px; margin-bottom: 28px; font-size: 13px; color: #92400e; line-height: 1.7; }
+  .change-banner strong { font-weight: 700; display: block; margin-bottom: 4px; color: #78350f; }
+
+  .timeline { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 32px; overflow-x: auto; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .tl-title { font-size: 13px; font-weight: 600; color: #555; margin-bottom: 12px; }
+  table.tl { width: 100%; border-collapse: collapse; min-width: 600px; }
+  table.tl th { font-size: 11px; color: #999; padding: 4px 3px; text-align: center; border-bottom: 1px solid #eee; }
+  table.tl th.name { text-align: left; padding-left: 8px; min-width: 80px; }
+  table.tl td.name-cell { padding: 6px 8px; }
+  .mn { font-size: 13px; font-weight: 600; }
+  .mr { font-size: 11px; color: #999; }
+  table.tl td.dc { padding: 3px 2px; }
+  .bar { border-radius: 4px; padding: 4px 6px; font-size: 10px; font-weight: 600; text-align: center; min-height: 28px; display: flex; align-items: center; justify-content: center; margin: 0 1px; }
+  .ba  { background: #dbeafe; color: #1e40af; }
+  .bm  { background: #d1fae5; color: #065f46; }
+  .bai { background: #fef3c7; color: #92400e; }
+  .bp  { background: #ede9fe; color: #4c1d95; }
+  .bf  { background: #f1f0eb; color: #555; border: 1px solid #ddd; }
+  .ms-row td { padding-top: 4px; }
+  .ms-inner { display: flex; font-size: 10px; color: #aaa; border-top: 1px solid #eee; }
+  .ms-seg { text-align: center; padding: 4px 0; border-right: 1px solid #eee; }
+  .ms-seg:last-child { border-right: none; }
+  .ms-seg.bold { font-weight: 600; color: #555; }
+
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .leg { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #555; }
+  .leg-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .tab { padding: 8px 18px; border-radius: 20px; border: 1px solid #ddd; background: #fff; color: #888; font-size: 13px; cursor: pointer; font-weight: 500; transition: all .15s; }
+  .tab:hover { border-color: #aaa; color: #333; }
+  .tab.active { color: #fff; border-color: transparent; }
+  .tab[data-id="ab"].active { background: #2563eb; }
+  .tab[data-id="c"].active  { background: #059669; }
+  .tab[data-id="d"].active  { background: #7c3aed; }
+  .tab[data-id="e"].active  { background: #059669; }
+
+  .panel { display: none; flex-direction: column; gap: 16px; }
+  .panel.active { display: flex; }
+
+  .mh { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 10px; }
+  .mh-badge { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .mh-title { font-size: 15px; font-weight: 700; }
+  .mh-sub { font-size: 12px; margin-top: 2px; opacity: 0.75; }
+
+  .mh-ab { background: #dbeafe; } .mh-ab .mh-badge { background: #2563eb; } .mh-ab .mh-title { color: #1e40af; } .mh-ab .mh-sub { color: #3b82f6; }
+  .mh-c  { background: #d1fae5; } .mh-c  .mh-badge { background: #059669; } .mh-c  .mh-title { color: #065f46; } .mh-c  .mh-sub { color: #10b981; }
+  .mh-d  { background: #ede9fe; } .mh-d  .mh-badge { background: #7c3aed; } .mh-d  .mh-title { color: #4c1d95; } .mh-d  .mh-sub { color: #8b5cf6; }
+  .mh-e  { background: #d1fae5; } .mh-e  .mh-badge { background: #059669; } .mh-e  .mh-title { color: #065f46; } .mh-e  .mh-sub { color: #10b981; }
+
+  .block { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .block-hd { display: flex; align-items: center; gap: 10px; padding: 13px 16px; cursor: pointer; user-select: none; border-left: 4px solid; }
+  .block-hd:hover { background: #fafaf8; }
+  .block-tag { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 20px; white-space: nowrap; }
+  .block-period { font-size: 11px; color: #aaa; white-space: nowrap; }
+  .block-name { font-size: 13px; font-weight: 600; flex: 1; color: #222; }
+  .block-arrow { font-size: 12px; color: #ccc; transition: transform .2s; }
+  .block.open .block-arrow { transform: rotate(180deg); }
+  .block-body { display: none; border-top: 1px solid #f0f0f0; }
+  .block.open .block-body { display: block; }
+
+  .bh-auth  { border-color: #3b82f6; }
+  .bh-match { border-color: #10b981; }
+  .bh-ai    { border-color: #f59e0b; }
+  .bh-prep  { border-color: #8b5cf6; }
+  .bh-inte  { border-color: #9ca3af; }
+  .bh-ui    { border-color: #3b82f6; }
+
+  .tag-auth  { background: #dbeafe; color: #1e40af; }
+  .tag-match { background: #d1fae5; color: #065f46; }
+  .tag-ai    { background: #fef3c7; color: #92400e; }
+  .tag-prep  { background: #ede9fe; color: #4c1d95; }
+  .tag-inte  { background: #f1f0eb; color: #555; }
+  .tag-ui    { background: #dbeafe; color: #1e40af; }
+
+  .sec { padding: 14px 16px; border-bottom: 1px solid #f5f5f0; }
+  .sec:last-child { border-bottom: none; }
+  .sec-label { font-size: 10px; font-weight: 700; color: #bbb; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+  .task-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .task-item { display: flex; gap: 9px; align-items: flex-start; }
+  .task-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+  .dot-a { background: #3b82f6; } .dot-m { background: #10b981; } .dot-ai { background: #f59e0b; } .dot-p { background: #8b5cf6; } .dot-g { background: #9ca3af; }
+  .task-text { font-size: 13px; color: #444; line-height: 1.65; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 11px; padding: 3px 10px; border-radius: 6px; font-weight: 500; border: 1px solid #e5e5e5; color: #555; background: #fafaf8; }
+  .comm-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .comm { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+  .comm-a  { background: #dbeafe; color: #1e40af; }
+  .comm-m  { background: #d1fae5; color: #065f46; }
+  .comm-ai { background: #fef3c7; color: #92400e; }
+  .comm-p  { background: #ede9fe; color: #4c1d95; }
+  .info-box { font-size: 12px; color: #555; line-height: 1.65; padding: 10px 12px; border-radius: 8px; background: #f9f9f6; border-left: 3px solid #e5e5e5; }
+  .info-box.connect { border-left-color: #10b981; background: #f0fdf4; }
+  .info-box.tip { border-left-color: #f59e0b; background: #fffbeb; }
+  .info-box.sim { border-left-color: #3b82f6; background: #eff6ff; }
+
+  .split-row { display: flex; gap: 10px; }
+  .split-col { flex: 1; }
+  .split-label { font-size: 11px; font-weight: 700; color: #888; margin-bottom: 6px; padding: 4px 8px; border-radius: 4px; }
+  .sl-a { background: #dbeafe; color: #1e40af; }
+  .sl-b { background: #bfdbfe; color: #1d4ed8; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1>🛠️ Re:Pitch 팀 역할 분배 v2</h1>
+  <p class="subtitle">5명 · 14일 (5/2 ~ 5/15) · 백엔드 제거 + 시뮬레이션 중심</p>
+
+  <div class="change-banner">
+    <strong>v2 변경 사항</strong>
+    인증 백엔드 API 제거 → 프론트 시뮬레이션으로 대체 · 매칭 점수 하드코딩 예시 데이터 표시 · C의 인증 모듈(pHash·YOLO) 제거 → LLM API + 프롬프트 엔지니어링 전담으로 변경 · B는 프론트 전담 · D 역할 재배치 (발표·QA 집중)
+  </div>
+
+  <!-- 타임라인 -->
+  <div class="timeline">
+    <div class="tl-title">전체 타임라인 (v2 · 백엔드 제거 버전)</div>
+    <div class="legend">
+      <div class="leg"><div class="leg-dot ba"></div>UI / 프론트엔드</div>
+      <div class="leg"><div class="leg-dot bm"></div>매칭 모델 (XGBoost)</div>
+      <div class="leg"><div class="leg-dot bai"></div>역제안서 AI</div>
+      <div class="leg"><div class="leg-dot bp"></div>데이터·기획·발표</div>
+      <div class="leg"><div class="leg-dot bf"></div>통합·동결·리허설</div>
+    </div>
+    <table class="tl">
+      <thead>
+        <tr>
+          <th class="name">팀원</th>
+          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>
+          <th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>13</th><th>14</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="name-cell"><div class="mn">A</div><div class="mr">프론트 리드</div></td>
+          <td class="dc" colspan="3"><div class="bar ba">인증 시뮬 UI</div></td>
+          <td class="dc" colspan="3"><div class="bar ba">매칭 대시보드</div></td>
+          <td class="dc" colspan="4"><div class="bar bai">제안서 UI + PDF</div></td>
+          <td class="dc" colspan="2"><div class="bar bf">전체 연결</div></td>
+          <td class="dc" colspan="2"><div class="bar bf">리허설</div></td>
+        </tr>
+        <tr>
+          <td class="name-cell"><div class="mn">B</div><div class="mr">프론트 서포트</div></td>
+          <td class="dc" colspan="2"><div class="bar bp">컴포넌트 설계</div></td>
+          <td class="dc" colspan="4"><div class="bar ba">인증 시뮬 UI</div></td>
+          <td class="dc" colspan="4"><div class="bar ba">매칭 UI + 제안서 UI</div></td>
+          <td class="dc" colspan="2"><div class="bar bf">버그 수정</div></td>
+          <td class="dc" colspan="2"><div class="bar bf">리허설</div></td>
+        </tr>
+        <tr>
+          <td class="name-cell"><div class="mn">C</div><div class="mr">LLM + AI</div></td>
+          <td class="dc" colspan="5"><div class="bar bai">LLM API + 프롬프트</div></td>
+          <td class="dc" colspan="3"><div class="bar bm">텍스트 임베딩</div></td>
+          <td class="dc" colspan="3"><div class="bar bai">고도화 + 백업</div></td>
+          <td class="dc" colspan="3"><div class="bar bf">리허설 + QA</div></td>
+        </tr>
+        <tr>
+          <td class="name-cell"><div class="mn">D</div><div class="mr">기획/발표</div></td>
+          <td class="dc" colspan="2"><div class="bar bp">시나리오 설계</div></td>
+          <td class="dc" colspan="3"><div class="bar bm">더미 데이터셋</div></td>
+          <td class="dc" colspan="3"><div class="bar bai">템플릿 + 시나리오</div></td>
+          <td class="dc" colspan="4"><div class="bar bp">발표자료 + QA</div></td>
+          <td class="dc" colspan="2"><div class="bar bf">리허설</div></td>
+        </tr>
+        <tr>
+          <td class="name-cell"><div class="mn">E</div><div class="mr">AI/모델링</div></td>
+          <td class="dc" colspan="3"><div class="bar bp">피처 설계</div></td>
+          <td class="dc" colspan="6"><div class="bar bm">XGBoost 매칭 모델</div></td>
+          <td class="dc" colspan="2"><div class="bar bai">KPI 연동 + 백업</div></td>
+          <td class="dc" colspan="1"><div class="bar bf">QA</div></td>
+          <td class="dc" colspan="2"><div class="bar bf">리허설</div></td>
+        </tr>
+        <tr class="ms-row">
+          <td colspan="15">
+            <div class="ms-inner">
+              <div class="ms-seg" style="flex:3">1~3일 인증 UI + 설계</div>
+              <div class="ms-seg" style="flex:3">4~6일 매칭 + LLM 시작</div>
+              <div class="ms-seg" style="flex:4">7~10일 제안서 AI 집중</div>
+              <div class="ms-seg bold" style="flex:2">11~12일 통합</div>
+              <div class="ms-seg bold" style="flex:2">13~14일 동결</div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 탭 -->
+  <div class="tabs">
+    <div class="tab active" data-id="ab" onclick="show('ab', this)">A+B · 프론트엔드</div>
+    <div class="tab" data-id="c"  onclick="show('c',  this)">C · AI/비전</div>
+    <div class="tab" data-id="d"  onclick="show('d',  this)">D · 기획/발표</div>
+    <div class="tab" data-id="e"  onclick="show('e',  this)">E · AI/모델링</div>
+  </div>
+
+  <!-- A+B -->
+  <div class="panel active" id="panel-ab">
+    <div class="mh mh-ab">
+      <div class="mh-badge">A+B</div>
+      <div>
+        <div class="mh-title">프론트엔드 (A 리드 · B 서포트)</div>
+        <div class="mh-sub">백엔드 없이 시뮬레이션 UI로 전체 플로우를 완성 — 심사위원 눈에 보이는 모든 것</div>
+      </div>
+    </div>
+
+    <div class="block open">
+      <div class="block-hd bh-ui" onclick="tog(this)">
+        <span class="block-tag tag-ui">UI</span><span class="block-period">1~2일</span>
+        <span class="block-name">전체 앱 구조 설계 + 컴포넌트 분담</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec"><div class="sec-label">해야 할 일</div>
+          <ul class="task-list">
+            <li class="task-item"><div class="task-dot dot-a"></div><div class="task-text">React 앱 초기 세팅 — Vite + Tailwind + 라우터 구성, 인증·매칭·제안서 3개 페이지 골격 생성</div></li>
+            <li class="task-item"><div class="task-dot dot-a"></div><div class="task-text">A·B 컴포넌트 분담 확정 — A는 인증 UI 먼저, B는 공통 컴포넌트(카드·뱃지·게이지·버튼) 먼저 만들어서 A가 가져다 쓰는 구조</div></li>
+            <li class="task-item"><div class="task-dot dot-a"></div><div class="task-text">하드코딩 예시 데이터 구조 정의 — 인증 스코어·매칭 결과·KPI 수치를 JSON 파일로 미리 만들어두고 UI에서 import해서 씀 (백엔드 없이 동작하게)</div></li>
+          </ul>
+        </div>
+        <div class="sec"><div class="sec-label">바이브코딩 툴</div>
+          <div class="chips"><span class="chip">Cursor + Claude</span><span class="chip">React (Vite)</span><span class="chip">Tailwind CSS</span><span class="chip">React Router</span></div>
+        </div>
+        <div class="sec"><div class="sec-label">소통 대상</div>
+          <div class="comm-row"><span class="comm comm-p">D와 시연 시나리오 확인</span><span class="comm comm-m">E와 예시 데이터 수치 합의</span></div>
+          <div class="info-box sim">하드코딩 예시 데이터(매칭 스코어·KPI)의 수치는 E가 XGBoost로 뽑은 실제 결과값을 받아서 넣어야 "AI가 계산한 것처럼" 보여요. E한테 1~2일차에 "대략 어떤 수치 나올 것 같아?" 먼저 물어보세요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-hd bh-auth" onclick="tog(this)">
+        <span class="block-tag tag-auth">인증 시뮬</span><span class="block-period">1~5일 (A 1~3일 / B 3~5일)</span>
+        <span class="block-name">인증 UI 시뮬레이션 (백엔드 없음)</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec"><div class="sec-label">핵심 원칙</div>
+          <div class="info-box sim">실제 OCR·YOLO 연산 없이 "업로드하면 결과가 나오는 것처럼" 보이게 만드는 게 목표예요. 로딩 딜레이 + 애니메이션으로 처리 중인 느낌을 주고, 결과는 미리 짜둔 JSON에서 꺼내면 돼요.</div>
+        </div>
+        <div class="sec">
+          <div class="split-row">
+            <div class="split-col">
+              <div class="split-label sl-a">A 담당 (1~3일)</div>
+              <ul class="task-list">
+                <li class="task-item"><div class="task-dot dot-a"></div><div class="task-text">영수증 이미지 업로드 화면 — 드래그앤드롭, 1.5초 로딩 후 "구매 확인됨" 결과 표시 (하드코딩)</div></li>
+                <li class="task-item"><div class="task-dot dot-a"></div><div class="task-text">인증 스코어 결과 화면 — 0→78점 게이지 애니메이션, 브론즈/실버/골드 뱃지, 항목별 점수 카드</div></li>
+              </ul>
+            </div>
+            <div class="split-col">
+              <div class="split-label sl-b">B 담당 (3~5일)</div>
+              <ul class="task-list">
+                <li class="task-item"><div class="task-dot dot-a"></div><div class="task-text">실사용 사진 업로드 화면 — 업로드 후 2초 딜레이, 사진 위에 바운딩 박스 오버레이 (이미지 위에 CSS로 그린 박스)</div></li>
+                <li class="task-item"><div class="task-dot dot-a"></div><div class="task-text">SNS URL 입력 → "감성 분석 완료" 결과 카드 (하드코딩 점수 표시)</div></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="sec"><div class="sec-label">바이브코딩 툴</div>
+          <div class="chips"><span class="chip">Cursor + Claude</span><span class="chip">framer-motion (애니)</span><span class="chip">react-dropzone</span><span class="chip">Tailwind CSS</span></div>
+        </div>
+        <div class="sec"><div class="sec-label">나중에 어떻게 연결되나</div>
+          <div class="info-box connect">인증 결과 화면에서 "매칭 보러 가기" 버튼 클릭 → 매칭 대시보드로 라우팅. 인증 스코어 수치가 매칭 카드에 "신뢰도 78점" 형태로 표시돼요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-hd bh-match" onclick="tog(this)">
+        <span class="block-tag tag-match">매칭</span><span class="block-period">4~10일 (A 4~6일 / B 9~10일)</span>
+        <span class="block-name">매칭 대시보드 UI (예시 데이터 기반)</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec"><div class="sec-label">해야 할 일</div>
+          <ul class="task-list">
+            <li class="task-item"><div class="task-dot dot-m"></div><div class="task-text">브랜드 조건 입력 폼 — 카테고리·타겟 연령·예산 선택, 선택 바꿀 때마다 추천 인플루언서 리스트 필터링 (E의 XGBoost 결과를 JSON으로 하드코딩해서 넣음)</div></li>
+            <li class="task-item"><div class="task-dot dot-m"></div><div class="task-text">추천 인플루언서 카드 — 매칭 스코어·예상 도달률·좋아요율 수치 표시, "추천 이유 Top-3" 뱃지 표시</div></li>
+            <li class="task-item"><div class="task-dot dot-m"></div><div class="task-text">카드 클릭 시 상세 모달 — 인플루언서 프로필·KPI 게이지·"제안서 요청" 버튼</div></li>
+          </ul>
+        </div>
+        <div class="sec"><div class="sec-label">바이브코딩 툴</div>
+          <div class="chips"><span class="chip">Cursor + Claude</span><span class="chip">Recharts (KPI 게이지)</span><span class="chip">Tailwind CSS</span></div>
+        </div>
+        <div class="sec"><div class="sec-label">소통 대상</div>
+          <div class="comm-row"><span class="comm comm-m">E에게 XGBoost 결과 JSON 수령 (6일차)</span></div>
+          <div class="info-box">E가 모델 돌린 결과(인플루언서별 스코어·KPI 예측값)를 JSON으로 받아서 UI에 하드코딩으로 넣어요. "AI가 계산한 실제 수치"라고 어필 가능해요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-hd bh-ai" onclick="tog(this)">
+        <span class="block-tag tag-ai">제안서 AI</span><span class="block-period">6~10일 (B 6~8일 / A 7~10일)</span>
+        <span class="block-name">LLM 연동 + 제안서 UI + PDF</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec">
+          <div class="split-row">
+            <div class="split-col">
+              <div class="split-label sl-b">B 담당 (6~10일) — 프론트 서포트</div>
+              <ul class="task-list">
+                <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">매칭 대시보드 UI 마무리 — A가 집중하는 제안서 UI 기간에 매칭 카드·모달 디테일 다듬기</div></li>
+                <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">C의 LLM API와 제안서 화면 연결 — C가 만든 /proposal/generate 엔드포인트를 A의 제안서 UI에 붙이는 연결 작업</div></li>
+                <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">공통 컴포넌트 유지보수 — 전체 화면에서 깨지는 UI 수정, 반응형 대응</div></li>
+              </ul>
+            </div>
+            <div class="split-col">
+              <div class="split-label sl-a">A 담당 (7~10일) — 제안서 UI</div>
+              <ul class="task-list">
+                <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">5개 블록 입력 화면 — 콘텐츠 포맷·키워드·소구점·일정·보수 스텝별 UI</div></li>
+                <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">제안서 생성 화면 — 타이핑 애니메이션 + 섹션별 인라인 편집</div></li>
+                <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">PDF 내보내기 + 브랜드 수신 화면(수락/거절 버튼)</div></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="sec"><div class="sec-label">바이브코딩 툴</div>
+          <div class="chips"><span class="chip">Cursor + Claude</span><span class="chip">html2canvas</span><span class="chip">jsPDF</span><span class="chip">React Streaming UI</span></div>
+        </div>
+        <div class="sec"><div class="sec-label">소통 대상</div>
+          <div class="comm-row"><span class="comm comm-m">C와 LLM API 연결 방식 합의</span><span class="comm comm-p">D에게 브랜드 템플릿 수령</span></div>
+        </div>
+        <div class="sec"><div class="sec-label">나중에 어떻게 연결되나</div>
+          <div class="info-box connect">심사 시연의 하이라이트. 인플루언서가 블록 5개 선택 → 30초 후 PDF 제안서 완성 → 브랜드 수락 화면. 이 플로우가 매끄럽게 돌면 심사 통과예요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-hd bh-inte" onclick="tog(this)">
+        <span class="block-tag tag-inte">통합</span><span class="block-period">11~12일</span>
+        <span class="block-name">전체 플로우 연결 + 버그 수정</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec"><div class="sec-label">해야 할 일</div>
+          <ul class="task-list">
+            <li class="task-item"><div class="task-dot dot-g"></div><div class="task-text">인증 → 매칭 → 제안서 세 화면 라우팅 연결, D의 시연 시나리오대로 처음부터 끝까지 클릭 테스트</div></li>
+            <li class="task-item"><div class="task-dot dot-g"></div><div class="task-text">심사장 환경 시뮬레이션 — 인터넷 느린 상황에서 LLM 응답 느리면 미리 만들어둔 제안서 결과물 백업으로 전환하는 버튼 추가</div></li>
+          </ul>
+        </div>
+        <div class="sec"><div class="sec-label">소통 대상</div>
+          <div class="comm-row"><span class="comm comm-p">D·E와 시연 리허설</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C -->
+  <div class="panel" id="panel-c">
+    <div class="mh mh-c"><div class="mh-badge">C</div><div><div class="mh-title">LLM / AI (ML 경험자)</div><div class="mh-sub">인증 모듈 제거 → LLM API + 프롬프트 엔지니어링 전담 — ML 이해가 프롬프트 품질을 결정</div></div></div>
+
+    <div class="block open">
+      <div class="block-hd bh-ai" onclick="tog(this)">
+        <span class="block-tag tag-ai">제안서 AI</span><span class="block-period">1~5일</span>
+        <span class="block-name">LLM API 연동 + 프롬프트 설계</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec"><div class="sec-label">해야 할 일</div>
+          <ul class="task-list">
+            <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">Claude API 또는 GPT-4o 연동 — 간단한 FastAPI 서버(또는 Next.js API route) 하나 세팅, /proposal/generate 엔드포인트 구현</div></li>
+            <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">시스템 프롬프트 설계 — "인플루언서 마케팅 기획 전문가" 역할 부여, 인플루언서 선택값 + KPI 수치 + 브랜드 정보를 구조화해서 LLM에 전달하는 프롬프트 작성</div></li>
+            <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">D의 브랜드 템플릿 10종 연결 — 브랜드 카테고리에 따라 시스템 프롬프트 자동 분기하는 로직 구현</div></li>
+            <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">SSE 스트리밍 응답 구현 — LLM 텍스트를 실시간으로 A 화면에 전달해서 타이핑 효과 가능하게</div></li>
+          </ul>
+        </div>
+        <div class="sec"><div class="sec-label">바이브코딩 툴</div>
+          <div class="chips"><span class="chip">Cursor + Claude</span><span class="chip">Claude API / GPT-4o</span><span class="chip">FastAPI or Next.js API route</span><span class="chip">Python</span></div>
+        </div>
+        <div class="sec"><div class="sec-label">소통 대상</div>
+          <div class="comm-row"><span class="comm comm-a">A와 스트리밍 연결 방식 합의</span><span class="comm comm-p">D에게 템플릿 수령 (4일차)</span></div>
+          <div class="info-box sim">C가 ML 이해가 있어서 프롬프트 엔지니어링이 훨씬 수월해요. "왜 제안서가 이상하게 나왔는지" 판단도 C가 할 수 있어서 B가 이 역할 맡는 것보다 품질이 높게 나와요.</div>
+        </div>
+        <div class="sec"><div class="sec-label">나중에 어떻게 연결되나</div>
+          <div class="info-box connect">C의 /proposal/generate API가 전체 데모의 하이라이트예요. A가 만든 블록 입력 UI → C의 LLM API → 제안서 텍스트 스트리밍 → A 화면에 타이핑 표시. 이 흐름이 매끄러워야 심사 통과예요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-hd bh-match" onclick="tog(this)">
+        <span class="block-tag tag-match">매칭</span><span class="block-period">6~8일</span>
+        <span class="block-name">텍스트 임베딩 → E에게 피처 전달</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec"><div class="sec-label">해야 할 일</div>
+          <ul class="task-list">
+            <li class="task-item"><div class="task-dot dot-m"></div><div class="task-text">sentence-transformers로 인플루언서 자기소개·키워드 ↔ 브랜드 설명 간 코사인 유사도 계산 — 결과를 "텍스트_유사도" 컬럼으로 E의 더미 데이터셋 CSV에 추가</div></li>
+            <li class="task-item"><div class="task-dot dot-m"></div><div class="task-text">D의 더미 인플루언서 500명 텍스트 피처에 유사도 값 계산해서 E에게 전달 (E가 XGBoost 학습 피처로 추가)</div></li>
+          </ul>
+        </div>
+        <div class="sec"><div class="sec-label">바이브코딩 툴</div>
+          <div class="chips"><span class="chip">Cursor + Claude</span><span class="chip">sentence-transformers</span><span class="chip">pandas</span></div>
+        </div>
+        <div class="sec"><div class="sec-label">소통 대상</div>
+          <div class="comm-row"><span class="comm comm-m">E와 피처 형식 합의 (6일차)</span><span class="comm comm-p">D에게 데이터 수령</span></div>
+          <div class="info-box">LLM API 작업과 병행하기 타이트할 수 있어요. LLM API가 5일차에 안정화되면 바로 텍스트 임베딩으로 넘어가는 것 목표로 잡으세요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-hd bh-ai" onclick="tog(this)">
+        <span class="block-tag tag-ai">제안서 AI</span><span class="block-period">9~11일</span>
+        <span class="block-name">프롬프트 고도화 + 시연 케이스 백업</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec"><div class="sec-label">해야 할 일</div>
+          <ul class="task-list">
+            <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">생성된 제안서 품질 테스트 — 브랜드 카테고리별로 톤앤매너가 다르게 나오는지 확인, 이상하면 시스템 프롬프트 수정</div></li>
+            <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">KPI 수치 현실성 검증 — E와 함께 "팔로워 5만 명인데 도달 150만 명"처럼 말이 안 되는 수치 수정</div></li>
+            <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">시연 케이스 5개 사전 생성 및 PDF 저장 — 뷰티·패션·식품·앱 카테고리별 완성 제안서 백업 (심사장 인터넷 불안정 대비, 이거 꼭 해야 함)</div></li>
+          </ul>
+        </div>
+        <div class="sec"><div class="sec-label">바이브코딩 툴</div>
+          <div class="chips"><span class="chip">Claude (프롬프트 튜닝)</span><span class="chip">Cursor</span></div>
+        </div>
+        <div class="sec"><div class="sec-label">소통 대상</div>
+          <div class="comm-row"><span class="comm comm-m">E와 KPI 수치 검증</span><span class="comm comm-a">A에게 백업 PDF 전달</span></div>
+          <div class="info-box tip">심사위원이 "이 도달률 어떻게 계산했어요?" 물어볼 때 C가 답변 준비도 해야 해요. ML 이해자니까 XGBoost 회귀 기반으로 설명할 수 있어요.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- D -->
+  <div class="panel" id="panel-d">
+    <div class="mh mh-d"><div class="mh-badge">D</div><div><div class="mh-title">기획 / 발표</div><div class="mh-sub">시연 시나리오 설계 + 더미 데이터 + 발표자료 + QA — 개발 외 모든 것</div></div></div>
+
+    <div class="block open">
+      <div class="block-hd bh-prep" onclick="tog(this)">
+        <span class="block-tag tag-prep">기획</span><span class="block-period">1~2일</span>
+        <span class="block-name">시연 시나리오 + 예시 데이터 수치 설계</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec"><div class="sec-label">해야 할 일</div>
+          <ul class="task-list">
+            <li class="task-item"><div class="task-dot dot-p"></div><div class="task-text">심사 시연 시나리오 초안 작성 — 누가 인플루언서 역/브랜드 역 맡을지, 어떤 브랜드·인플루언서 설정으로 시연할지 결정 (A·B가 하드코딩할 데이터의 스토리를 만드는 것)</div></li>
+            <li class="task-item"><div class="task-dot dot-p"></div><div class="task-text">하드코딩 예시 데이터 수치 협의 — 인증 스코어(예: 78점), 매칭 스코어(예: 92점), KPI(예: 예상 도달 12만 명)를 현실적으로 설정해서 A·B·E에게 전달</div></li>
+          </ul>
+        </div>
+        <div class="sec"><div class="sec-label">바이브코딩 툴</div>
+          <div class="chips"><span class="chip">Notion / Google Docs</span><span class="chip">Google Sheets (수치 정리)</span></div>
+        </div>
+        <div class="sec"><div class="sec-label">소통 대상</div>
+          <div class="comm-row"><span class="comm comm-a">A·B에게 시나리오 + 수치 전달</span><span class="comm comm-m">E와 KPI 수치 협의</span></div>
+          <div class="info-box tip">D가 1~2일차에 시나리오·수치를 확정해줘야 A·B가 하드코딩 데이터 만들 수 있어요. 이게 늦으면 UI 개발이 막혀요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-hd bh-match" onclick="tog(this)">
+        <span class="block-tag tag-match">데이터</span><span class="block-period">3~5일</span>
+        <span class="block-name">XGBoost용 더미 데이터셋 제작</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec"><div class="sec-label">해야 할 일</div>
+          <ul class="task-list">
+            <li class="task-item"><div class="task-dot dot-m"></div><div class="task-text">Python Faker + numpy로 인플루언서 500명 더미 데이터 생성 — 팔로워 수·좋아요율·연령 분포·카테고리 등 E와 합의한 12개 피처</div></li>
+            <li class="task-item"><div class="task-dot dot-m"></div><div class="task-text">브랜드 50개 더미 데이터 생성 — 카테고리·타겟 연령·예산·톤앤매너 8개 피처</div></li>
+            <li class="task-item"><div class="task-dot dot-m"></div><div class="task-text">협업 성사 레이블(0/1) 반자동 생성 후 CSV로 E·C에게 전달 (5일차 안에 완료)</div></li>
+          </ul>
+        </div>
+        <div class="sec"><div class="sec-label">바이브코딩 툴</div>
+          <div class="chips"><span class="chip">Cursor + Claude</span><span class="chip">Python Faker</span><span class="chip">pandas / numpy</span><span class="chip">Google Colab</span></div>
+        </div>
+        <div class="sec"><div class="sec-label">소통 대상</div>
+          <div class="comm-row"><span class="comm comm-m">E·C에게 5일차 안에 CSV 전달</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-hd bh-ai" onclick="tog(this)">
+        <span class="block-tag tag-ai">제안서 AI</span><span class="block-period">6~8일</span>
+        <span class="block-name">브랜드 템플릿 10종 작성</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec"><div class="sec-label">해야 할 일</div>
+          <ul class="task-list">
+            <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">뷰티·패션·식품·앱서비스 등 카테고리별 제안서 프롬프트 템플릿 10종 작성 — "시스템 프롬프트 지시문 + 원하는 출력 섹션 구조"로 구성, B에게 전달</div></li>
+            <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">시연 시나리오 고도화 — 심사위원 질문 예상 Q&A 포함, 멘트 순서·담당자 역할 최종 확정</div></li>
+          </ul>
+        </div>
+        <div class="sec"><div class="sec-label">바이브코딩 툴</div>
+          <div class="chips"><span class="chip">Claude (프롬프트 작성)</span><span class="chip">Notion</span></div>
+        </div>
+        <div class="sec"><div class="sec-label">소통 대상</div>
+          <div class="comm-row"><span class="comm comm-ai">B에게 템플릿 전달</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-hd bh-prep" onclick="tog(this)">
+        <span class="block-tag tag-prep">발표</span><span class="block-period">9~14일</span>
+        <span class="block-name">발표자료 + 전체 QA</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec"><div class="sec-label">해야 할 일</div>
+          <ul class="task-list">
+            <li class="task-item"><div class="task-dot dot-p"></div><div class="task-text">경진대회 발표 슬라이드 제작 — 문제 정의·솔루션·기술 구조·시장성·팀 소개, Gamma AI로 초안 생성 후 다듬기</div></li>
+            <li class="task-item"><div class="task-dot dot-p"></div><div class="task-text">전체 QA 담당 — 매일 A·B 화면 테스트해서 버그·어색한 UX 발견 시 즉시 공유, 심사위원 시각으로 "이게 설득력 있나" 피드백</div></li>
+            <li class="task-item"><div class="task-dot dot-p"></div><div class="task-text">13~14일 시연 리허설 주도 — 실제 심사 시간에 맞게 타이머 재고 전체 플로우 반복 연습</div></li>
+          </ul>
+        </div>
+        <div class="sec"><div class="sec-label">바이브코딩 툴</div>
+          <div class="chips"><span class="chip">Gamma (슬라이드 AI)</span><span class="chip">Canva / PPT</span></div>
+        </div>
+        <div class="sec"><div class="sec-label">소통 대상</div>
+          <div class="comm-row"><span class="comm comm-a">전원과 리허설</span></div>
+          <div class="info-box tip">D가 9일차부터 발표자료에 집중할 수 있는 건 앞에서 데이터·템플릿을 빠르게 끝냈기 때문이에요. 9일차 이후엔 개발 개입하지 말고 발표 퀄리티에만 집중하는 게 맞아요.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- E -->
+  <div class="panel" id="panel-e">
+    <div class="mh mh-e"><div class="mh-badge">E</div><div><div class="mh-title">AI / 모델링 (XGBoost 단일)</div><div class="mh-sub">Two-Tower 제거 → XGBoost만 — 경영통계·데이터분석 수업 이수자 추천</div></div></div>
+
+    <div class="block open">
+      <div class="block-hd bh-prep" onclick="tog(this)">
+        <span class="block-tag tag-prep">준비</span><span class="block-period">1~3일</span>
+        <span class="block-name">피처 명세 확정 + 환경 세팅</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec"><div class="sec-label">해야 할 일</div>
+          <ul class="task-list">
+            <li class="task-item"><div class="task-dot dot-p"></div><div class="task-text">D와 함께 인플루언서·브랜드 피처 명세 확정 — 12개 피처 목록 확정, 카테고리 원핫 인코딩 방식 결정</div></li>
+            <li class="task-item"><div class="task-dot dot-p"></div><div class="task-text">XGBoost 학습 환경 세팅 — Google Colab 또는 로컬 Python 환경, 학습 파이프라인 골격 코드 미리 작성</div></li>
+            <li class="task-item"><div class="task-dot dot-p"></div><div class="task-text">A·B와 결과 JSON 형식 합의 — "매칭 스코어·KPI 예측값·추천 이유 Top-3를 어떤 구조로 줄 건지" 미리 설계해서 A가 UI 만들 때 참고하게</div></li>
+          </ul>
+        </div>
+        <div class="sec"><div class="sec-label">바이브코딩 툴</div>
+          <div class="chips"><span class="chip">Cursor + Claude</span><span class="chip">XGBoost</span><span class="chip">scikit-learn</span><span class="chip">Google Colab</span></div>
+        </div>
+        <div class="sec"><div class="sec-label">소통 대상</div>
+          <div class="comm-row"><span class="comm comm-p">D와 피처 명세</span><span class="comm comm-a">A·B와 JSON 형식</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-hd bh-match" onclick="tog(this)">
+        <span class="block-tag tag-match">매칭</span><span class="block-period">4~9일</span>
+        <span class="block-name">XGBoost 매칭 모델 학습 (전담)</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec"><div class="sec-label">해야 할 일</div>
+          <ul class="task-list">
+            <li class="task-item"><div class="task-dot dot-m"></div><div class="task-text">XGBoost 분류기 학습 — D의 더미 데이터 + C의 텍스트 유사도 피처 합쳐서 협업 성사 여부(0/1) 예측, 출력 확률값이 매칭 스코어</div></li>
+            <li class="task-item"><div class="task-dot dot-m"></div><div class="task-text">feature importance 기반 추천 이유 생성 — 상위 3개 피처를 자연어로 변환 (예: "뷰티 카테고리 전문성 1위", "타겟 연령 일치율 92%")</div></li>
+            <li class="task-item"><div class="task-dot dot-m"></div><div class="task-text">XGBRegressor로 KPI 회귀 — 도달률·좋아요율·전환율 예측값 산출</div></li>
+            <li class="task-item"><div class="task-dot dot-m"></div><div class="task-text">결과를 JSON으로 export — 인플루언서 20~30명 결과를 A가 UI에 하드코딩할 수 있게 JSON 파일로 뽑아서 전달 (6일차)</div></li>
+            <li class="task-item"><div class="task-dot dot-m"></div><div class="task-text">정확도 측정 문서화 — accuracy·RMSE 수치 정리, "AI 매칭 엔진 정확도 XX%" 발표 슬라이드용 수치 D에게 전달</div></li>
+          </ul>
+        </div>
+        <div class="sec"><div class="sec-label">바이브코딩 툴</div>
+          <div class="chips"><span class="chip">Cursor + Claude</span><span class="chip">XGBoost</span><span class="chip">scikit-learn</span><span class="chip">pandas</span><span class="chip">matplotlib</span></div>
+        </div>
+        <div class="sec"><div class="sec-label">소통 대상</div>
+          <div class="comm-row"><span class="comm comm-p">D에게 데이터 수령 (5일차)</span><span class="comm comm-m">C에게 텍스트 유사도 피처 수령</span><span class="comm comm-a">A에게 결과 JSON 전달 (6일차)</span></div>
+          <div class="info-box">결과 JSON을 6일차에 A에게 넘겨야 A가 매칭 대시보드 UI 만들 수 있어요. E의 가장 중요한 데드라인이에요.</div>
+        </div>
+        <div class="sec"><div class="sec-label">나중에 어떻게 연결되나</div>
+          <div class="info-box connect">E의 XGBoost 결과 JSON이 A의 매칭 대시보드에 하드코딩으로 들어가고, B의 제안서 프롬프트에도 KPI 수치로 삽입돼요. "AI가 실제로 계산한 수치"를 UI에서 보여주는 구조예요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-hd bh-ai" onclick="tog(this)">
+        <span class="block-tag tag-ai">제안서 AI</span><span class="block-period">10~11일</span>
+        <span class="block-name">KPI 수치 검증 + 시연 백업</span><span class="block-arrow">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sec"><div class="sec-label">해야 할 일</div>
+          <ul class="task-list">
+            <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">제안서에 들어간 KPI 수치가 현실적인지 검증 — C와 함께 "팔로워 5만 명 인플루언서가 도달 150만 명은 말이 안 됨" 같은 검토</div></li>
+            <li class="task-item"><div class="task-dot dot-ai"></div><div class="task-text">시연 백업용 JSON 최종 확정 — 심사장에서 쓸 예시 데이터 최종 버전 확정 후 A·B에게 전달</div></li>
+          </ul>
+        </div>
+        <div class="sec"><div class="sec-label">소통 대상</div>
+          <div class="comm-row"><span class="comm comm-m">C와 수치 검증</span><span class="comm comm-a">A·B에게 최종 데이터 전달</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+function show(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  el.classList.add('active');
+}
+function tog(hd) {
+  hd.closest('.block').classList.toggle('open');
+}
+</script>
+</body>
+</html>
