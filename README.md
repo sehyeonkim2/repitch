@@ -1,19 +1,21 @@
 # Re:Pitch
 
-Korean reverse-pitch (역제안) influencer marketing platform with authenticity authentication. Built for a startup competition demo.
+진정성 인증 기반 역제안(역제안서) 인플루언서 마케팅 플랫폼. 창업경진대회 데모 버전입니다.
 
-**Live:** https://repitch.vercel.app/
+**라이브 데모:** https://repitch.vercel.app/
 
-## What it does
+## 핵심 컨셉
 
-Demo flow (~3 minutes):
+기존 인플루언서 마케팅의 흐름을 뒤집습니다. 브랜드가 인플루언서를 찾는 것이 아니라, **실제로 제품을 사용 중인 인플루언서가 브랜드에 직접 광고를 역제안**합니다. 진정성을 AI로 검증하기 때문에 광고비 대비 효율이 높고, 가짜 인플루언서를 원천 차단합니다.
 
-1. **인증** — Influencer proves real product use via 영수증 OCR + 실사용 사진 + SNS 후기 (40/30/30 weighted scoring → Bronze/Silver/Gold tier → "Re:Pitch Certified Real User" mark)
-2. **AI 매칭** — Brand-side dashboard ranks influencers by category / 타겟 연령 / 톤앤매너 / 예산 / 팔로워 규모
-3. **제안서 작성** — Influencer authors 역제안서 to the requesting brand, with streaming AI generation + PDF export
-4. **브랜드 수신** — Brand reviews and chooses 수락 / 거절 / 협의
+## 데모 플로우 (약 3분)
 
-## Quick start
+1. **인증** — 인플루언서가 영수증 OCR + 실사용 사진 + SNS 후기로 진짜 사용자임을 증명 (40/30/30 가중합 → Bronze/Silver/Gold 등급 → "Re:Pitch Certified Real User" 마크 부여)
+2. **AI 매칭** — 브랜드 측 대시보드에서 카테고리·타겟 연령·톤앤매너·예산·팔로워 규모로 인플루언서 추천 순위 산출
+3. **제안서 작성** — 인플루언서가 요청받은 브랜드에 역제안서를 작성. 스트리밍 AI 생성 + PDF 내보내기 지원
+4. **브랜드 수신** — 브랜드가 제안서 검토 후 수락 / 거절 / 협의 요청
+
+## 빠른 시작
 
 ```bash
 npm install
@@ -22,48 +24,48 @@ npm run build    # tsc -b && vite build
 npm run lint
 ```
 
-## Tech stack
+## 기술 스택
 
 - **Vite 8** + **React 19** + **TypeScript 6** (strict)
-- **Tailwind CSS v4** with `@theme` tokens (no `tailwind.config.js`)
+- **Tailwind CSS v4** — `@theme` 토큰 시스템 (`tailwind.config.js` 미사용)
 - **react-router-dom 7**, **framer-motion 12**
-- **jspdf + html2canvas** for PDF export (lazy-loaded)
-- Vercel deployment
+- **jspdf + html2canvas** — PDF 내보내기 (lazy-load)
+- **Vercel** 배포
 
-## Routes
+## 라우트
 
-| Path | Component | Perspective |
+| 경로 | 컴포넌트 | 역할 |
 |---|---|---|
 | `/` | `AuthDashboard` | 인플루언서 뷰 |
 | `/matching` | `MatchingDashboard` | 브랜드 담당자 뷰 |
 | `/proposal` | `ProposalGenerator` | 인플루언서 뷰 |
-| `/proposal/sent/:id` | `ProposalSent` | 인플루언서 뷰 (transit) |
+| `/proposal/sent/:id` | `ProposalSent` | 인플루언서 뷰 (전송 중) |
 | `/brand/inbox/:id` | `BrandInbox` | 브랜드 담당자 뷰 |
 
-## Project structure
+## 디렉토리 구조
 
 ```
 src/
   components/    TopNav · Card · Badge · Button · Gauge · Icon
-  data/          influencers (30) · brands (5) · authEvidenceSamples · proposalTemplates
+  data/          influencers (30명) · brands (5개) · authEvidenceSamples · proposalTemplates
   lib/           scoring · matching · llmClient · pdfExport
-  pages/         5 route components
-  state/         AppContext (cross-route state, resets on refresh)
-  index.css      @theme tokens (colors, typography, spacing)
-docs/            requirements PDFs + team role plan
-public/          favicon, icons
+  pages/         5개 라우트 컴포넌트
+  state/         AppContext (라우트 간 상태, 새로고침 시 초기화)
+  index.css      @theme 토큰 정의 (컬러 / 타이포그래피 / 스페이싱)
+docs/            요구사항 PDF + 팀 역할 분배 문서
+public/          파비콘 / 아이콘
 ```
 
-## Backend
+## 백엔드
 
-Fully mocked — no real API. Mock JSON in `src/data/`, simulated delays in page components.
+전부 목(mock) 처리되어 있습니다. 실제 API 호출은 없고, `src/data/`의 JSON과 컴포넌트 안의 시뮬레이션 딜레이로 동작합니다.
 
-The LLM client at `src/lib/llmClient.ts` exposes `streamProposal()` returning an `AsyncIterable<string>`. Currently uses `mockClient` (templated streaming). Swap to a real Claude/GPT-4o endpoint by replacing the `llmClient` export.
+`src/lib/llmClient.ts`의 `streamProposal()`이 `AsyncIterable<string>`을 반환합니다. 현재는 `mockClient`(템플릿 기반 스트리밍)를 사용하지만, 실제 Claude / GPT-4o 엔드포인트가 준비되면 `llmClient` export만 교체하면 됩니다.
 
-## Design tokens
+## 디자인 시스템
 
-Defined in `src/index.css` under `@theme`. Trustworthy Blue `#004ac6` primary, Emerald Green `#006c49` secondary, surface scale, Inter typography, 8px-grid spacing, 12px corner radius default. Source spec: `docs/`.
+`src/index.css`의 `@theme` 블록에 모든 토큰이 정의되어 있습니다. Trustworthy Blue `#004ac6` 프라이머리, Emerald Green `#006c49` 세컨더리, Material 3 스타일의 surface 스케일, Inter 타이포그래피, 8px 그리드 스페이싱, 기본 12px 모서리 곡률. 원본 스펙은 `docs/`에서 확인할 수 있습니다.
 
-## License
+## 라이선스
 
-Private — competition project.
+비공개 — 창업경진대회 출품 프로젝트.
