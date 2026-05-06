@@ -5,6 +5,7 @@ import MatchingDashboard from "./pages/MatchingDashboard";
 import ProposalGenerator from "./pages/ProposalGenerator";
 import ProposalSent from "./pages/ProposalSent";
 import BrandInbox from "./pages/BrandInbox";
+import CampaignDashboard from "./pages/CampaignDashboard";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/proposal" element={<ProposalGenerator />} />
           <Route path="/proposal/sent/:id" element={<ProposalSent />} />
           <Route path="/brand/inbox/:id" element={<BrandInbox />} />
+          <Route path="/brand/campaign/:id" element={<CampaignDashboard />} />
         </Routes>
       </Router>
     </AppProvider>
