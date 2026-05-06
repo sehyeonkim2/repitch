@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { TopNav } from "../components/TopNav";
+import { MobileHeader } from "../components/MobileHeader";
 import { Card } from "../components/Card";
 import { Badge } from "../components/Badge";
 import { Button } from "../components/Button";
@@ -29,19 +29,8 @@ const CATEGORIES: Array<Category | "전체"> = [
   "전자기기",
   "앱서비스",
 ];
-const AGES: Array<AgeBucket | "전체"> = [
-  "전체",
-  "10대",
-  "20대",
-  "30대",
-  "40대 이상",
-];
-const TONES: Array<Tone | "전체"> = [
-  "전체",
-  "정보전달형",
-  "유머형",
-  "감성형",
-];
+const AGES: Array<AgeBucket | "전체"> = ["전체", "10대", "20대", "30대", "40대 이상"];
+const TONES: Array<Tone | "전체"> = ["전체", "정보전달형", "유머형", "감성형"];
 const BUDGETS: Array<BudgetTier | "전체"> = [
   "전체",
   "100만원 미만",
@@ -78,9 +67,7 @@ const FilterSelect = <T extends string>({
   onChange: (v: T) => void;
 }) => (
   <div>
-    <label className="block font-label-sm text-label-sm text-on-surface mb-2">
-      {label}
-    </label>
+    <label className="block font-label-sm text-label-sm text-on-surface mb-2">{label}</label>
     <div className="relative">
       <select
         className="w-full h-12 appearance-none bg-surface-container-lowest border border-outline-variant rounded-lg pl-4 pr-10 focus:border-primary focus:ring-1 focus:ring-primary outline-none font-body-md text-body-md text-on-surface cursor-pointer"
@@ -105,10 +92,12 @@ const InfluencerCard = ({
   inf,
   onRequest,
   onSave,
+  saved,
 }: {
   inf: MatchedInfluencer;
   onRequest: (inf: MatchedInfluencer) => void;
   onSave: () => void;
+  saved: boolean;
 }) => {
   const reachLabel = inf.estimatedReach.toLocaleString("ko-KR");
   const followerLabel = inf.followers.toLocaleString("ko-KR");
@@ -119,123 +108,67 @@ const InfluencerCard = ({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.25 }}
     >
-      <Card accent="secondary" className="p-lg flex flex-col h-full">
-        <div className="flex justify-between items-start mb-md">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-surface-container-high shrink-0 bg-surface-container">
-              <img
-                src={inf.avatarUrl}
-                alt={inf.handle}
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-            <div>
-              <h3 className="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
-                {inf.handle}
-                {inf.verified && (
-                  <Icon name="verified" filled className="!text-secondary" />
-                )}
-              </h3>
-              <p className="font-caption text-caption text-on-surface-variant">
-                {inf.bio}
-              </p>
-            </div>
+      <Card accent="secondary" className="p-4 flex flex-col">
+        <div className="flex items-start gap-3 mb-3">
+          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-surface-container-high shrink-0 bg-surface-container">
+            <img
+              src={inf.avatarUrl}
+              alt={inf.handle}
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
           </div>
-          <Badge variant="match-score">매칭 적합도 {inf.matchScore}점</Badge>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-label-sm text-label-sm text-on-surface flex items-center gap-1 truncate">
+              @{inf.handle}
+              {inf.verified && (
+                <Icon name="verified" filled className="!text-secondary" size={14} />
+              )}
+            </h3>
+            <p className="text-caption text-on-surface-variant truncate">{inf.bio}</p>
+          </div>
+          <Badge variant="match-score">{inf.matchScore}점</Badge>
         </div>
 
-        <div className="flex gap-6 mb-md pb-md border-b border-surface-variant">
-          <div>
-            <p className="font-caption text-caption text-on-surface-variant mb-1">
-              팔로워
-            </p>
-            <p className="font-headline-md text-headline-md text-on-surface">
-              {followerLabel}명
-            </p>
+        <div className="grid grid-cols-2 gap-2 text-caption mb-3">
+          <div className="bg-surface-container-low rounded-lg p-2">
+            <div className="text-on-surface-variant">팔로워</div>
+            <div className="text-on-surface font-semibold">{followerLabel}</div>
           </div>
-          <div className="w-px bg-surface-variant" />
-          <div>
-            <p className="font-caption text-caption text-on-surface-variant mb-1">
-              평균 참여율
-            </p>
-            <p className="font-headline-md text-headline-md text-on-surface">
-              {inf.engagementRate}%
-            </p>
+          <div className="bg-surface-container-low rounded-lg p-2">
+            <div className="text-on-surface-variant">참여율</div>
+            <div className="text-on-surface font-semibold">{inf.engagementRate}%</div>
+          </div>
+          <div className="bg-surface-container-low rounded-lg p-2">
+            <div className="text-on-surface-variant">예상 도달</div>
+            <div className="text-on-surface font-semibold">{reachLabel}</div>
+          </div>
+          <div className="bg-surface-container-low rounded-lg p-2">
+            <div className="text-on-surface-variant">예상 CTR</div>
+            <div className="text-on-surface font-semibold">{inf.estimatedCtr}%</div>
           </div>
         </div>
 
-        <div className="bg-surface p-4 rounded-lg mb-md border border-surface-variant/50">
-          <h4 className="font-label-sm text-label-sm text-on-surface mb-3 flex items-center gap-2">
-            <Icon name="trending_up" className="!text-primary" />
-            예상 캠페인 성과 지표
-          </h4>
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed-variant">
-                <Icon name="group" size={18} />
-              </div>
-              <div>
-                <p className="font-caption text-caption text-on-surface-variant">
-                  예상 도달
-                </p>
-                <p className="font-body-md text-body-md font-semibold text-on-surface">
-                  {reachLabel}명
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed-variant">
-                <Icon name="ads_click" size={18} />
-              </div>
-              <div>
-                <p className="font-caption text-caption text-on-surface-variant">
-                  예상 CTR
-                </p>
-                <p className="font-body-md text-body-md font-semibold text-on-surface">
-                  {inf.estimatedCtr}%
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mb-md flex-1">
-          <h4 className="font-label-sm text-label-sm text-on-surface mb-3">
-            AI 추천 사유
-          </h4>
-          <ul className="space-y-2">
-            {inf.reasons.map((r) => (
-              <li
-                key={r}
-                className="flex items-start gap-2 font-body-md text-body-md text-on-surface-variant"
-              >
-                <Icon
-                  name="check_circle"
-                  filled
-                  className="!text-secondary mt-0.5"
-                  size={20}
-                />
+        {inf.reasons.length > 0 && (
+          <div className="mb-3 space-y-1">
+            {inf.reasons.slice(0, 2).map((r) => (
+              <div key={r} className="flex items-start gap-2 text-caption text-on-surface-variant">
+                <Icon name="check_circle" filled className="!text-secondary mt-0.5 shrink-0" size={14} />
                 <span>{r}</span>
-              </li>
+              </div>
             ))}
-          </ul>
-        </div>
+          </div>
+        )}
 
-        <div className="flex gap-3">
-          <Button
-            variant="primary"
-            fullWidth
-            icon="send"
-            onClick={() => onRequest(inf)}
-          >
-            제안서 요청하기
+        <div className="flex gap-2">
+          <Button variant="primary" fullWidth icon="send" onClick={() => onRequest(inf)}>
+            제안 받기
           </Button>
           <Button
-            variant="secondary"
-            icon="bookmark_add"
+            variant={saved ? "primary" : "secondary"}
+            icon={saved ? "bookmark" : "bookmark_add"}
             onClick={onSave}
             aria-label="저장"
           />
@@ -245,17 +178,101 @@ const InfluencerCard = ({
   );
 };
 
+interface FilterModalProps {
+  open: boolean;
+  filters: MatchingFilters;
+  onChange: (next: MatchingFilters) => void;
+  onClose: () => void;
+  onReset: () => void;
+}
+
+const FilterModal = ({ open, filters, onChange, onClose, onReset }: FilterModalProps) => (
+  <AnimatePresence>
+    {open && (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[90] bg-on-surface/30 flex items-end sm:items-center justify-center"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "100%" }}
+          transition={{ type: "spring", damping: 28, stiffness: 280 }}
+          className="bg-surface-container-lowest w-full max-w-[440px] rounded-t-3xl sm:rounded-3xl border-t border-outline-variant max-h-[85vh] flex flex-col"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between px-4 py-3 border-b border-outline-variant">
+            <button
+              type="button"
+              onClick={onReset}
+              className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary"
+            >
+              초기화
+            </button>
+            <h3 className="font-label-sm text-label-sm text-on-surface">필터</h3>
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface"
+              aria-label="닫기"
+            >
+              <Icon name="close" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <FilterSelect
+              label="카테고리"
+              value={filters.category}
+              options={CATEGORIES}
+              onChange={(v) => onChange({ ...filters, category: v })}
+            />
+            <FilterSelect
+              label="타겟 연령"
+              value={filters.age}
+              options={AGES}
+              onChange={(v) => onChange({ ...filters, age: v })}
+            />
+            <FilterSelect
+              label="원하는 톤앤매너"
+              value={filters.tone}
+              options={TONES}
+              onChange={(v) => onChange({ ...filters, tone: v })}
+            />
+            <FilterSelect
+              label="예산 구간"
+              value={filters.budget}
+              options={BUDGETS}
+              onChange={(v) => onChange({ ...filters, budget: v })}
+            />
+            <FilterSelect
+              label="팔로워 규모"
+              value={filters.followers}
+              options={FOLLOWER_BANDS}
+              onChange={(v) => onChange({ ...filters, followers: v })}
+            />
+          </div>
+          <div className="border-t border-outline-variant p-4">
+            <Button variant="primary" fullWidth size="lg" onClick={onClose}>
+              결과 보기
+            </Button>
+          </div>
+        </motion.div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
+
 const MatchingDashboard = () => {
   const navigate = useNavigate();
   const { selectInfluencer } = useApp();
   const [filters, setFilters] = useState<MatchingFilters>(initialFilters);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
 
-  const ranked = useMemo(
-    () => rankInfluencers(filters, influencers, 8),
-    [filters],
-  );
+  const ranked = useMemo(() => rankInfluencers(filters, influencers, 12), [filters]);
 
   const handleRequest = (inf: MatchedInfluencer) => {
     selectInfluencer(inf);
@@ -264,144 +281,111 @@ const MatchingDashboard = () => {
 
   const handleReset = () => setFilters(initialFilters);
 
+  // Active filter chips (skip "전체" values)
+  const activeChips = [
+    { key: "category", label: filters.category, isAll: filters.category === "전체" },
+    { key: "age", label: filters.age, isAll: filters.age === "전체" },
+    { key: "tone", label: filters.tone, isAll: filters.tone === "전체" },
+    { key: "budget", label: filters.budget, isAll: filters.budget === "전체" },
+    { key: "followers", label: filters.followers, isAll: filters.followers === "전체" },
+  ].filter((c) => !c.isAll);
+
   return (
-    <div className="bg-surface-container-low text-on-background min-h-screen pt-16">
-      <TopNav view="brand" />
+    <div className="flex flex-col min-h-full bg-surface-container-low">
+      <MobileHeader
+        title="AI 매칭"
+        view="brand"
+        right={
+          <button
+            type="button"
+            onClick={() => setFilterOpen(true)}
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface"
+            aria-label="필터"
+          >
+            <Icon name="tune" />
+          </button>
+        }
+      />
 
-      <div className="flex min-h-[calc(100vh-64px)]">
-        {/* Mobile drawer backdrop */}
-        {drawerOpen && (
-          <div
-            className="lg:hidden fixed inset-0 top-16 bg-black/40 z-20"
-            onClick={() => setDrawerOpen(false)}
-            aria-hidden
-          />
-        )}
+      <main className="flex-1 px-4 py-3 pb-24 space-y-3">
+        {/* Active filter chips */}
+        <div className="flex items-center gap-2 overflow-x-auto -mx-4 px-4 pb-1">
+          <span className="text-caption text-on-surface-variant shrink-0">필터:</span>
+          {activeChips.length === 0 ? (
+            <span className="text-caption text-on-surface-variant">전체</span>
+          ) : (
+            activeChips.map((chip) => (
+              <span
+                key={chip.key}
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-[11px] font-medium shrink-0"
+              >
+                {chip.label}
+              </span>
+            ))
+          )}
+          <button
+            type="button"
+            onClick={() => setFilterOpen(true)}
+            className="ml-auto text-caption text-primary font-medium shrink-0"
+          >
+            변경
+          </button>
+        </div>
 
-        <aside
-          className={`bg-surface-container-lowest h-[calc(100vh-64px)] w-72 fixed left-0 top-16 overflow-y-auto border-r border-outline-variant flex flex-col p-lg space-y-md z-30 transition-transform duration-200 ${
-            drawerOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-          }`}
-        >
-          <div className="flex items-start justify-between">
-            <div>
-              <h2 className="font-headline-md text-headline-md text-on-surface mb-1">
-                브랜드 타겟 설정
-              </h2>
-              <p className="font-caption text-caption text-on-surface-variant">
-                조건을 바꾸면 추천 인플루언서가 즉시 재정렬됩니다.
-              </p>
-            </div>
-            <button
-              type="button"
-              className="lg:hidden p-1 rounded-md hover:bg-surface-container-low text-on-surface-variant"
-              onClick={() => setDrawerOpen(false)}
-              aria-label="필터 닫기"
-            >
-              <Icon name="close" size={20} />
-            </button>
-          </div>
-          <div className="space-y-md">
-            <FilterSelect
-              label="카테고리"
-              value={filters.category}
-              options={CATEGORIES}
-              onChange={(v) => setFilters((p) => ({ ...p, category: v }))}
-            />
-            <FilterSelect
-              label="타겟 연령"
-              value={filters.age}
-              options={AGES}
-              onChange={(v) => setFilters((p) => ({ ...p, age: v }))}
-            />
-            <FilterSelect
-              label="원하는 톤앤매너"
-              value={filters.tone}
-              options={TONES}
-              onChange={(v) => setFilters((p) => ({ ...p, tone: v }))}
-            />
-            <FilterSelect
-              label="예산 구간"
-              value={filters.budget}
-              options={BUDGETS}
-              onChange={(v) => setFilters((p) => ({ ...p, budget: v }))}
-            />
-            <FilterSelect
-              label="팔로워 규모"
-              value={filters.followers}
-              options={FOLLOWER_BANDS}
-              onChange={(v) => setFilters((p) => ({ ...p, followers: v }))}
-            />
-            <Button variant="ghost" fullWidth onClick={handleReset}>
+        <div className="flex items-center justify-between">
+          <p className="text-caption text-on-surface-variant">
+            추천 {ranked.length}명
+          </p>
+          <Badge variant="secondary" icon="auto_awesome">
+            실시간 AI 매칭
+          </Badge>
+        </div>
+
+        {ranked.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 text-on-surface-variant">
+            <Icon name="search_off" size={48} />
+            <p className="mt-4 font-body-md text-body-md">조건에 맞는 인플루언서가 없습니다.</p>
+            <Button variant="ghost" onClick={handleReset} className="mt-3">
               필터 초기화
             </Button>
           </div>
-        </aside>
+        ) : (
+          <div className="space-y-3">
+            <AnimatePresence mode="popLayout">
+              {ranked.map((inf) => (
+                <InfluencerCard
+                  key={inf.id}
+                  inf={inf}
+                  saved={savedIds.has(inf.id)}
+                  onRequest={handleRequest}
+                  onSave={() =>
+                    setSavedIds((prev) => {
+                      const next = new Set(prev);
+                      if (next.has(inf.id)) next.delete(inf.id);
+                      else next.add(inf.id);
+                      return next;
+                    })
+                  }
+                />
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
 
-        <main className="flex-1 lg:ml-72 p-lg bg-surface-container-low min-h-screen">
-          <header className="mb-lg flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-            <div>
-              <h1 className="font-headline-lg text-headline-lg text-on-surface">
-                AI 추천 인플루언서 Top 매칭
-              </h1>
-              <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-                선택하신 조건에 기반해 {ranked.length}명의 최적 파트너를 찾았습니다.
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="secondary"
-                icon="tune"
-                onClick={() => setDrawerOpen(true)}
-                className="lg:!hidden"
-              >
-                필터 보기
-              </Button>
-              <Badge variant="secondary" icon="auto_awesome">
-                실시간 AI 매칭
-              </Badge>
-            </div>
-          </header>
+        {savedIds.size > 0 && (
+          <p className="font-caption text-caption text-on-surface-variant text-center pt-2">
+            관심 저장 {savedIds.size}명
+          </p>
+        )}
+      </main>
 
-          {ranked.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-32 text-on-surface-variant">
-              <Icon name="search_off" size={48} />
-              <p className="mt-4 font-body-md text-body-md">
-                조건에 맞는 인플루언서를 찾지 못했습니다.
-              </p>
-              <Button variant="ghost" onClick={handleReset} className="mt-3">
-                필터 초기화
-              </Button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-gutter">
-              <AnimatePresence mode="popLayout">
-                {ranked.map((inf) => (
-                  <InfluencerCard
-                    key={inf.id}
-                    inf={inf}
-                    onRequest={handleRequest}
-                    onSave={() =>
-                      setSavedIds((prev) => {
-                        const next = new Set(prev);
-                        if (next.has(inf.id)) next.delete(inf.id);
-                        else next.add(inf.id);
-                        return next;
-                      })
-                    }
-                  />
-                ))}
-              </AnimatePresence>
-            </div>
-          )}
-
-          {savedIds.size > 0 && (
-            <p className="mt-6 font-caption text-caption text-on-surface-variant">
-              관심 저장 {savedIds.size}명
-            </p>
-          )}
-        </main>
-      </div>
+      <FilterModal
+        open={filterOpen}
+        filters={filters}
+        onChange={setFilters}
+        onClose={() => setFilterOpen(false)}
+        onReset={handleReset}
+      />
     </div>
   );
 };

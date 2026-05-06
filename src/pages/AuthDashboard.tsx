@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { TopNav } from "../components/TopNav";
+import { motion } from "framer-motion";
+import { MobileHeader } from "../components/MobileHeader";
+import { StickyAction } from "../components/StickyAction";
 import { Card } from "../components/Card";
 import { Badge } from "../components/Badge";
 import { Button } from "../components/Button";
@@ -173,191 +174,178 @@ const AuthDashboard = () => {
     status.receipt === "done" || status.photo === "done" || status.sns === "done";
 
   return (
-    <div className="bg-background text-on-background min-h-screen pt-16">
-      <TopNav view="influencer" />
+    <div className="flex flex-col min-h-full">
+      <MobileHeader title="사용자 인증" view="influencer" subtitle="진짜 사용자 인증 스코어" />
 
-      <main className="max-w-7xl mx-auto px-margin py-lg">
-        <header className="mb-lg">
-          <h1 className="font-headline-lg text-headline-lg text-on-surface">
-            Re:Pitch 인증 대시보드
-          </h1>
-          <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-            세 가지 증빙 자료를 업로드해 '진짜 사용자' 인증 스코어를 확인하세요.
-            인증된 인플루언서만 브랜드에 역제안서를 보낼 수 있습니다.
-          </p>
-        </header>
+      <main className="flex-1 px-4 py-4 pb-24 space-y-4">
+        {/* Score gauge card */}
+        <Card className="p-lg flex flex-col items-center text-center">
+          <span className="font-label-sm text-label-sm text-on-surface-variant mb-3">
+            인증 스코어 (가중합)
+          </span>
+          <Gauge value={score.total} label="100점 만점" />
+          <div className="mt-md flex flex-col items-center gap-2">
+            {score.tier !== "None" ? (
+              <Badge variant="tier" tier={score.tier} icon="workspace_premium">
+                {score.tier} 등급
+              </Badge>
+            ) : (
+              <Badge variant="neutral">미인증</Badge>
+            )}
+            {score.certified && (
+              <Badge variant="certified-real-user">
+                Re:Pitch Certified Real User
+              </Badge>
+            )}
+          </div>
+        </Card>
 
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-gutter mb-lg">
-          <Card className="lg:col-span-1 p-lg flex flex-col items-center justify-center text-center">
-            <span className="font-label-sm text-label-sm text-on-surface-variant mb-3">
-              인증 스코어 (가중합)
-            </span>
-            <Gauge value={score.total} label="100점 만점" />
-            <div className="mt-md flex flex-col items-center gap-2">
-              {score.tier !== "None" ? (
-                <Badge variant="tier" tier={score.tier} icon="workspace_premium">
-                  {score.tier} 등급
-                </Badge>
-              ) : (
-                <Badge variant="neutral">미인증</Badge>
-              )}
-              {score.certified && (
-                <Badge variant="certified-real-user">
-                  Re:Pitch Certified Real User
-                </Badge>
-              )}
-            </div>
-          </Card>
-
-          <Card className="lg:col-span-2 p-lg">
-            <h2 className="font-headline-md text-headline-md text-on-surface mb-md">
-              점수 구성
-            </h2>
-            <div className="space-y-4">
-              {[
-                {
-                  label: "구매 영수증",
-                  base: score.receiptScore,
-                  weight: RECEIPT_WEIGHT,
-                  done: status.receipt === "done",
-                },
-                {
-                  label: "실사용 사진",
-                  base: score.photoScore,
-                  weight: PHOTO_WEIGHT,
-                  done: status.photo === "done",
-                },
-                {
-                  label: "SNS 후기",
-                  base: score.snsScore,
-                  weight: SNS_WEIGHT,
-                  done: status.sns === "done",
-                },
-              ].map((item) => {
-                const contribution = item.base * item.weight;
-                const pct = (item.base / 100) * 100;
-                return (
-                  <div key={item.label}>
-                    <div className="flex justify-between font-label-sm text-label-sm mb-1">
-                      <span className="text-on-surface flex items-center gap-2">
-                        {item.label}
-                        <span className="text-on-surface-variant text-caption">
-                          가중치 {Math.round(item.weight * 100)}%
-                        </span>
+        {/* Score composition */}
+        <Card className="p-lg">
+          <h2 className="font-label-sm text-label-sm text-on-surface-variant mb-3">
+            점수 구성
+          </h2>
+          <div className="space-y-3">
+            {[
+              {
+                label: "구매 영수증",
+                base: score.receiptScore,
+                weight: RECEIPT_WEIGHT,
+                done: status.receipt === "done",
+              },
+              {
+                label: "실사용 사진",
+                base: score.photoScore,
+                weight: PHOTO_WEIGHT,
+                done: status.photo === "done",
+              },
+              {
+                label: "SNS 후기",
+                base: score.snsScore,
+                weight: SNS_WEIGHT,
+                done: status.sns === "done",
+              },
+            ].map((item) => {
+              const contribution = item.base * item.weight;
+              const pct = (item.base / 100) * 100;
+              return (
+                <div key={item.label}>
+                  <div className="flex justify-between font-label-sm text-label-sm mb-1">
+                    <span className="text-on-surface flex items-center gap-2">
+                      {item.label}
+                      <span className="text-on-surface-variant text-caption">
+                        {Math.round(item.weight * 100)}%
                       </span>
-                      <span className="text-on-surface font-medium">
-                        {item.done
-                          ? `${Math.round(contribution)}점 기여`
-                          : "대기 중"}
-                      </span>
-                    </div>
-                    <div className="h-2 rounded-full bg-surface-container-high overflow-hidden">
-                      <motion.div
-                        className={`h-full ${item.done ? "bg-primary" : "bg-surface-container-highest"}`}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${item.done ? pct : 0}%` }}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
-                      />
-                    </div>
+                    </span>
+                    <span className="text-on-surface font-medium">
+                      {item.done ? `${Math.round(contribution)}점` : "대기"}
+                    </span>
                   </div>
-                );
-              })}
-            </div>
-            <p className="font-caption text-caption text-on-surface-variant mt-md">
-              교차검증: {anyDone ? "구매일과 SNS 게시일 일치 ✓" : "최소 1개 자료 업로드 시 검증 시작"}
-            </p>
-          </Card>
-        </section>
-
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-lg">
-          {EVIDENCE_META.map((meta) => {
-            const s = status[meta.type];
-            return (
-              <Card key={meta.type} className="p-lg flex flex-col">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-lg bg-primary-fixed flex items-center justify-center text-on-primary-fixed-variant">
-                    <Icon name={meta.icon} />
+                  <div className="h-2 rounded-full bg-surface-container-high overflow-hidden">
+                    <motion.div
+                      className={`h-full ${item.done ? "bg-primary" : "bg-surface-container-highest"}`}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${item.done ? pct : 0}%` }}
+                      transition={{ duration: 0.6, ease: "easeOut" }}
+                    />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-headline-md text-headline-md text-on-surface text-[20px]">
-                      {meta.title}
-                    </h3>
-                  </div>
-                  <span className="text-caption text-on-surface-variant">
-                    {Math.round(meta.weight * 100)}%
-                  </span>
                 </div>
-                <p className="font-body-md text-body-md text-on-surface-variant mb-4 flex-grow">
-                  {meta.description}
-                </p>
+              );
+            })}
+          </div>
+          <p className="font-caption text-caption text-on-surface-variant mt-3">
+            교차검증: {anyDone ? "구매일과 SNS 게시일 일치 ✓" : "최소 1개 자료 업로드 시 검증 시작"}
+          </p>
+        </Card>
 
-                {meta.type === "sns" && s === "idle" && (
-                  <input
-                    value={snsUrl}
-                    onChange={(e) => setSnsUrl(e.target.value)}
-                    placeholder="https://instagram.com/p/..."
-                    type="url"
-                    className="w-full h-11 px-3 rounded-lg bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none mb-3 font-body-md text-body-md"
-                  />
-                )}
-
-                {meta.type !== "sns" && s === "idle" && (
-                  <div className="border-2 border-dashed border-outline-variant rounded-lg h-24 flex flex-col items-center justify-center text-on-surface-variant text-caption mb-3 bg-surface-container-low">
-                    <Icon name="upload_file" size={28} />
-                    <span className="mt-1">파일을 끌어다 놓거나 클릭</span>
-                  </div>
-                )}
-
+        {/* Evidence cards stacked */}
+        {EVIDENCE_META.map((meta) => {
+          const s = status[meta.type];
+          return (
+            <Card key={meta.type} className="p-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-lg bg-primary-fixed flex items-center justify-center text-on-primary-fixed-variant shrink-0">
+                  <Icon name={meta.icon} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-label-sm text-label-sm text-on-surface">
+                    {meta.title}
+                  </h3>
+                  <p className="text-caption text-on-surface-variant truncate">
+                    가중치 {Math.round(meta.weight * 100)}%
+                  </p>
+                </div>
                 {s === "done" && (
-                  <div className="mb-3">{renderResult(meta.type)}</div>
+                  <Icon name="check_circle" filled className="!text-secondary" />
                 )}
+              </div>
+              <p className="font-body-md text-body-md text-on-surface-variant mb-3">
+                {meta.description}
+              </p>
 
-                <Button
-                  variant={s === "done" ? "ghost" : "secondary"}
-                  fullWidth
-                  disabled={s === "loading"}
-                  onClick={() => simulate(meta.type, meta.durationMs)}
-                  icon={
-                    s === "loading"
-                      ? "progress_activity"
-                      : s === "done"
-                        ? "check_circle"
-                        : meta.type === "sns"
-                          ? "psychology"
-                          : "auto_fix_high"
-                  }
-                >
-                  {s === "loading"
-                    ? meta.type === "receipt"
-                      ? "OCR 분석 중..."
-                      : meta.type === "photo"
-                        ? "Vision 분석 중..."
-                        : "감성 분석 중..."
+              {meta.type === "sns" && s === "idle" && (
+                <input
+                  value={snsUrl}
+                  onChange={(e) => setSnsUrl(e.target.value)}
+                  placeholder="https://instagram.com/p/..."
+                  type="url"
+                  className="w-full h-11 px-3 rounded-lg bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none mb-3 font-body-md text-body-md"
+                />
+              )}
+
+              {meta.type !== "sns" && s === "idle" && (
+                <div className="border-2 border-dashed border-outline-variant rounded-lg h-24 flex flex-col items-center justify-center text-on-surface-variant text-caption mb-3 bg-surface-container-low">
+                  <Icon name="upload_file" size={28} />
+                  <span className="mt-1">파일을 끌어다 놓거나 탭</span>
+                </div>
+              )}
+
+              {s === "done" && <div className="mb-3">{renderResult(meta.type)}</div>}
+
+              <Button
+                variant={s === "done" ? "ghost" : "secondary"}
+                fullWidth
+                disabled={s === "loading"}
+                onClick={() => simulate(meta.type, meta.durationMs)}
+                icon={
+                  s === "loading"
+                    ? "progress_activity"
                     : s === "done"
-                      ? "다시 분석"
+                      ? "check_circle"
                       : meta.type === "sns"
-                        ? "분석 시작"
-                        : "업로드 시뮬레이션"}
-                </Button>
-              </Card>
-            );
-          })}
-        </section>
-
-        <div className="flex justify-end">
-          <AnimatePresence>
-            <Button
-              variant="primary"
-              size="lg"
-              iconRight="arrow_forward"
-              disabled={!anyDone}
-              onClick={() => navigate("/matching")}
-            >
-              매칭 대시보드로 이동
-            </Button>
-          </AnimatePresence>
-        </div>
+                        ? "psychology"
+                        : "auto_fix_high"
+                }
+              >
+                {s === "loading"
+                  ? meta.type === "receipt"
+                    ? "OCR 분석 중..."
+                    : meta.type === "photo"
+                      ? "Vision 분석 중..."
+                      : "감성 분석 중..."
+                  : s === "done"
+                    ? "다시 분석"
+                    : meta.type === "sns"
+                      ? "분석 시작"
+                      : "업로드 시뮬레이션"}
+              </Button>
+            </Card>
+          );
+        })}
       </main>
+
+      <StickyAction>
+        <Button
+          variant="primary"
+          fullWidth
+          size="lg"
+          iconRight="arrow_forward"
+          disabled={!anyDone}
+          onClick={() => navigate("/matching")}
+        >
+          매칭 화면으로 이동
+        </Button>
+      </StickyAction>
     </div>
   );
 };

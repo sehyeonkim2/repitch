@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { TopNav } from "../components/TopNav";
+import { MobileHeader } from "../components/MobileHeader";
+import { StickyAction } from "../components/StickyAction";
 import { Card } from "../components/Card";
 import { Badge } from "../components/Badge";
 import { Button } from "../components/Button";
@@ -34,22 +35,20 @@ const ProposalBody = ({ proposal }: { proposal: SubmittedProposal }) => {
   if (current) sections.push(current);
 
   return (
-    <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-10">
-      <div className="border-b-2 border-on-surface pb-6 mb-8 text-center">
-        <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
+    <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5">
+      <div className="border-b-2 border-on-surface pb-4 mb-5 text-center">
+        <h1 className="font-headline-md text-headline-md text-on-surface mb-1">
           Re:Pitch 역제안서
         </h1>
-        <p className="font-body-md text-body-md text-on-surface-variant">
-          {title}
-        </p>
+        <p className="text-caption text-on-surface-variant">{title}</p>
       </div>
-      <div className="space-y-8">
+      <div className="space-y-5">
         {sections.map((s) => (
           <section key={s.heading}>
-            <h3 className="font-headline-md text-headline-md text-primary mb-3 border-b border-surface-variant pb-2">
+            <h3 className="font-label-sm text-label-sm text-primary mb-2 border-b border-surface-variant pb-1">
               {s.heading}
             </h3>
-            <div className="font-body-lg text-body-lg text-on-surface leading-relaxed whitespace-pre-line">
+            <div className="font-body-md text-body-md text-on-surface leading-relaxed whitespace-pre-line">
               {s.body}
             </div>
           </section>
@@ -72,7 +71,7 @@ const SuccessModal = ({
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
-    className="fixed inset-0 z-[100] bg-on-surface/30 backdrop-blur-sm flex items-center justify-center p-6"
+    className="fixed inset-0 z-[100] bg-on-surface/30 backdrop-blur-sm flex items-center justify-center p-4"
   >
     <motion.div
       initial={{ scale: 0.9, opacity: 0, y: 16 }}
@@ -98,15 +97,11 @@ const SuccessModal = ({
         </div>
         <div className="flex justify-between text-caption">
           <span className="text-on-surface-variant">예상 CTR</span>
-          <span className="text-on-surface font-medium">
-            {proposal.estimatedCtr}%
-          </span>
+          <span className="text-on-surface font-medium">{proposal.estimatedCtr}%</span>
         </div>
         <div className="flex justify-between text-caption">
           <span className="text-on-surface-variant">계약 보수</span>
-          <span className="text-on-surface font-medium">
-            {proposal.input.보수}
-          </span>
+          <span className="text-on-surface font-medium">{proposal.input.보수}</span>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -114,12 +109,40 @@ const SuccessModal = ({
           닫기
         </Button>
         <Button variant="primary" fullWidth icon="analytics" onClick={onCampaign}>
-          캠페인 성과 보기
+          캠페인 보기
         </Button>
       </div>
     </motion.div>
   </motion.div>
 );
+
+interface SectionProps {
+  title: string;
+  icon: string;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+}
+
+const CollapsibleSection = ({ title, icon, defaultOpen = false, children }: SectionProps) => {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <Card className="overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="w-full flex items-center gap-2 px-4 py-3 text-left hover:bg-surface-container-low"
+      >
+        <Icon name={icon} className="!text-primary" />
+        <span className="font-label-sm text-label-sm text-on-surface flex-1">{title}</span>
+        <Icon
+          name="expand_more"
+          className={`!text-on-surface-variant transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && <div className="px-4 pb-4 border-t border-outline-variant pt-4">{children}</div>}
+    </Card>
+  );
+};
 
 const BrandInbox = () => {
   const { id } = useParams<{ id: string }>();
@@ -131,25 +154,17 @@ const BrandInbox = () => {
 
   if (!proposal) {
     return (
-      <div className="bg-background min-h-screen pt-16">
-        <TopNav view="brand" />
-        <main className="max-w-2xl mx-auto px-margin py-xl text-center">
-          <Icon
-            name="inbox"
-            size={48}
-            className="!text-on-surface-variant"
-          />
-          <h1 className="font-headline-lg text-headline-lg text-on-surface mt-4">
+      <div className="flex flex-col min-h-full">
+        <MobileHeader title="받은 제안" back view="brand" />
+        <main className="flex-1 flex flex-col items-center justify-center text-center px-6 py-12">
+          <Icon name="inbox" size={48} className="!text-on-surface-variant" />
+          <h1 className="font-headline-md text-headline-md text-on-surface mt-4">
             제안서를 찾을 수 없습니다
           </h1>
           <p className="font-body-md text-body-md text-on-surface-variant mt-2 mb-6">
             세션이 만료되었거나 직접 URL에 접근하셨습니다.
           </p>
-          <Button
-            variant="primary"
-            icon="restart_alt"
-            onClick={() => navigate("/")}
-          >
+          <Button variant="primary" icon="restart_alt" onClick={() => navigate("/")}>
             처음으로 돌아가기
           </Button>
         </main>
@@ -160,157 +175,110 @@ const BrandInbox = () => {
   const inf = proposal.influencer;
 
   return (
-    <div className="bg-surface-container-low min-h-screen pt-16">
-      <TopNav view="brand" />
+    <div className="flex flex-col min-h-full bg-surface-container-low">
+      <MobileHeader
+        title="받은 제안"
+        back={() => navigate("/")}
+        view="brand"
+        subtitle={`${proposal.brand.name} · ${new Date(proposal.createdAt).toLocaleDateString("ko-KR")}`}
+      />
 
-      <main className="max-w-6xl mx-auto px-margin py-lg">
-        <header className="mb-lg">
-          <div className="flex items-center gap-2 text-caption text-on-surface-variant mb-2">
-            <Icon name="inbox" size={16} />
-            <span>받은 제안 · {new Date(proposal.createdAt).toLocaleString("ko-KR")}</span>
-          </div>
-          <h1 className="font-headline-lg text-headline-lg text-on-surface">
-            새로운 역제안이 도착했습니다
-          </h1>
-          <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-            {proposal.brand.name} ({proposal.brand.product}) 대상 제안 검토
-          </p>
-        </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
-          {/* Left: influencer profile */}
-          <div className="lg:col-span-1 space-y-md">
-            <Card className="p-lg">
-              <div className="flex items-center gap-3 mb-md">
-                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-surface-container-high bg-surface-container">
-                  <img
-                    src={inf.avatarUrl}
-                    alt={inf.handle}
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-                <div>
-                  <h3 className="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
-                    @{inf.handle}
-                    {inf.verified && (
-                      <Icon name="verified" filled className="!text-secondary" />
-                    )}
-                  </h3>
-                  <p className="font-caption text-caption text-on-surface-variant">
-                    {inf.bio}
-                  </p>
-                </div>
-              </div>
-              <Badge variant="certified-real-user" className="mb-md">
-                Re:Pitch Certified Real User
-              </Badge>
-              <div className="grid grid-cols-2 gap-3 text-caption mb-md">
-                <div className="bg-surface-container-low rounded-lg p-3">
-                  <div className="text-on-surface-variant">팔로워</div>
-                  <div className="text-on-surface font-semibold">
-                    {inf.followers.toLocaleString("ko-KR")}명
-                  </div>
-                </div>
-                <div className="bg-surface-container-low rounded-lg p-3">
-                  <div className="text-on-surface-variant">참여율</div>
-                  <div className="text-on-surface font-semibold">
-                    {inf.engagementRate}%
-                  </div>
-                </div>
-                <div className="bg-surface-container-low rounded-lg p-3">
-                  <div className="text-on-surface-variant">예상 도달</div>
-                  <div className="text-on-surface font-semibold">
-                    {proposal.estimatedReach.toLocaleString("ko-KR")}
-                  </div>
-                </div>
-                <div className="bg-surface-container-low rounded-lg p-3">
-                  <div className="text-on-surface-variant">예상 CTR</div>
-                  <div className="text-on-surface font-semibold">
-                    {proposal.estimatedCtr}%
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {inf.topHashtags.slice(0, 4).map((h) => (
-                  <span
-                    key={h}
-                    className="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant text-[11px]"
-                  >
-                    {h}
-                  </span>
-                ))}
-              </div>
-            </Card>
-
-            <Card className="p-lg">
-              <h4 className="font-label-sm text-label-sm text-on-surface mb-3 flex items-center gap-2">
-                <Icon name="local_offer" className="!text-primary" />
-                제안 조건
-              </h4>
-              <div className="space-y-2 text-caption">
-                <div className="flex justify-between">
-                  <span className="text-on-surface-variant">콘텐츠 포맷</span>
-                  <span className="text-on-surface font-medium">
-                    {proposal.input.콘텐츠_포맷}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-on-surface-variant">플랫폼</span>
-                  <span className="text-on-surface font-medium">
-                    {proposal.input.플랫폼}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-on-surface-variant">강조 타겟</span>
-                  <span className="text-on-surface font-medium">
-                    {proposal.input.타겟_소구점}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-on-surface-variant">희망 보수</span>
-                  <span className="text-on-surface font-medium">
-                    {proposal.input.보수}
-                  </span>
-                </div>
-              </div>
-            </Card>
-
-            <div className="space-y-2">
-              <Button
-                variant="primary"
-                fullWidth
-                size="lg"
-                icon="check_circle"
-                onClick={() => setDecision("accept")}
-              >
-                수락
-              </Button>
-              <Button
-                variant="secondary"
-                fullWidth
-                icon="forum"
-                onClick={() => setDecision("negotiate")}
-              >
-                협의 요청
-              </Button>
-              <Button
-                variant="ghost"
-                fullWidth
-                icon="close"
-                onClick={() => setDecision("reject")}
-              >
-                거절
-              </Button>
+      <main className="flex-1 px-4 py-4 pb-24 space-y-3">
+        {/* Influencer profile snippet (always visible) */}
+        <Card className="p-4">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-surface-container-high bg-surface-container shrink-0">
+              <img
+                src={inf.avatarUrl}
+                alt={inf.handle}
+                className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="font-label-sm text-label-sm text-on-surface flex items-center gap-1">
+                @{inf.handle}
+                {inf.verified && (
+                  <Icon name="verified" filled className="!text-secondary" size={14} />
+                )}
+              </h3>
+              <p className="text-caption text-on-surface-variant truncate">{inf.bio}</p>
             </div>
           </div>
-
-          {/* Right: proposal body */}
-          <div className="lg:col-span-2">
-            <ProposalBody proposal={proposal} />
+          <Badge variant="certified-real-user" className="mb-3">
+            Re:Pitch Certified Real User
+          </Badge>
+          <div className="grid grid-cols-2 gap-2 text-caption">
+            <div className="bg-surface-container-low rounded-lg p-2">
+              <div className="text-on-surface-variant">팔로워</div>
+              <div className="text-on-surface font-semibold">
+                {inf.followers.toLocaleString("ko-KR")}
+              </div>
+            </div>
+            <div className="bg-surface-container-low rounded-lg p-2">
+              <div className="text-on-surface-variant">참여율</div>
+              <div className="text-on-surface font-semibold">{inf.engagementRate}%</div>
+            </div>
+            <div className="bg-surface-container-low rounded-lg p-2">
+              <div className="text-on-surface-variant">예상 도달</div>
+              <div className="text-on-surface font-semibold">
+                {proposal.estimatedReach.toLocaleString("ko-KR")}
+              </div>
+            </div>
+            <div className="bg-surface-container-low rounded-lg p-2">
+              <div className="text-on-surface-variant">예상 CTR</div>
+              <div className="text-on-surface font-semibold">{proposal.estimatedCtr}%</div>
+            </div>
           </div>
-        </div>
+        </Card>
+
+        {/* Collapsible sections */}
+        <CollapsibleSection title="제안 조건" icon="local_offer" defaultOpen>
+          <div className="space-y-2 text-caption">
+            <div className="flex justify-between">
+              <span className="text-on-surface-variant">콘텐츠 포맷</span>
+              <span className="text-on-surface font-medium">{proposal.input.콘텐츠_포맷}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-on-surface-variant">플랫폼</span>
+              <span className="text-on-surface font-medium">{proposal.input.플랫폼}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-on-surface-variant">강조 타겟</span>
+              <span className="text-on-surface font-medium text-right max-w-[60%]">
+                {proposal.input.타겟_소구점}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-on-surface-variant">희망 보수</span>
+              <span className="text-on-surface font-medium">{proposal.input.보수}</span>
+            </div>
+          </div>
+        </CollapsibleSection>
+
+        <CollapsibleSection title="제안서 본문" icon="description" defaultOpen>
+          <ProposalBody proposal={proposal} />
+        </CollapsibleSection>
       </main>
+
+      <StickyAction>
+        <div className="grid grid-cols-3 gap-2">
+          <Button variant="ghost" fullWidth onClick={() => setDecision("reject")}>
+            거절
+          </Button>
+          <Button variant="secondary" fullWidth onClick={() => setDecision("negotiate")}>
+            협의
+          </Button>
+          <Button
+            variant="primary"
+            fullWidth
+            icon="check_circle"
+            onClick={() => setDecision("accept")}
+          >
+            수락
+          </Button>
+        </div>
+      </StickyAction>
 
       <AnimatePresence>
         {decision === "accept" && (
@@ -325,7 +293,7 @@ const BrandInbox = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-on-surface/30 backdrop-blur-sm flex items-center justify-center p-6"
+            className="fixed inset-0 z-[100] bg-on-surface/30 backdrop-blur-sm flex items-center justify-center p-4"
             onClick={() => setDecision(null)}
           >
             <motion.div
@@ -334,12 +302,7 @@ const BrandInbox = () => {
               className="bg-surface-container-lowest rounded-xl border border-outline-variant max-w-[28rem] w-full p-lg text-center"
               onClick={(e) => e.stopPropagation()}
             >
-              <Icon
-                name="forum"
-                filled
-                className="!text-primary mb-3"
-                size={32}
-              />
+              <Icon name="forum" filled className="!text-primary mb-3" size={32} />
               <h2 className="font-headline-md text-headline-md text-on-surface mb-2">
                 협의 요청을 보냈습니다
               </h2>
@@ -357,7 +320,7 @@ const BrandInbox = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-on-surface/30 backdrop-blur-sm flex items-center justify-center p-6"
+            className="fixed inset-0 z-[100] bg-on-surface/30 backdrop-blur-sm flex items-center justify-center p-4"
             onClick={() => setDecision(null)}
           >
             <motion.div

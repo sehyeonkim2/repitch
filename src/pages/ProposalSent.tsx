@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { TopNav } from "../components/TopNav";
+import { MobileHeader } from "../components/MobileHeader";
 import { Icon } from "../components/Icon";
 import { useApp } from "../state/AppContext";
 
@@ -22,9 +22,9 @@ const ProposalSent = () => {
   const proposal = id ? getProposal(id) : null;
 
   return (
-    <div className="bg-background min-h-screen pt-16">
-      <TopNav view="influencer" />
-      <main className="max-w-2xl mx-auto px-margin py-xl flex flex-col items-center text-center">
+    <div className="flex flex-col min-h-full">
+      <MobileHeader title="전송 중" view="influencer" />
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-6 py-12">
         <motion.div
           initial={{ scale: 0.6, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -39,7 +39,7 @@ const ProposalSent = () => {
           transition={{ delay: 0.2 }}
           className="font-headline-lg text-headline-lg text-on-surface mb-2"
         >
-          제안서를 브랜드에 전송 중...
+          제안서를 전송 중...
         </motion.h1>
         <p className="font-body-md text-body-md text-on-surface-variant mb-md">
           {proposal
