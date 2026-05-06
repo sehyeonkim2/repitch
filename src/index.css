@@ -1,65 +1,68 @@
 @import "tailwindcss";
 
 @theme {
-  /* === Colors (DESIGN.md Material 3 token set) === */
-  --color-primary: #004ac6;
+  /* === Colors (B&W + electric blue accent, matching the logo aesthetic) === */
+  /* Primary = electric blue accent (the one accent in the system) */
+  --color-primary: #2563eb;
   --color-on-primary: #ffffff;
-  --color-primary-container: #2563eb;
-  --color-on-primary-container: #eeefff;
-  --color-primary-fixed: #dbe1ff;
-  --color-primary-fixed-dim: #b4c5ff;
-  --color-on-primary-fixed: #00174b;
-  --color-on-primary-fixed-variant: #003ea8;
-  --color-inverse-primary: #b4c5ff;
+  --color-primary-container: #dbeafe;
+  --color-on-primary-container: #1e3a8a;
+  --color-primary-fixed: #dbeafe;
+  --color-primary-fixed-dim: #93c5fd;
+  --color-on-primary-fixed: #0a1f5c;
+  --color-on-primary-fixed-variant: #1d4ed8;
+  --color-inverse-primary: #93c5fd;
 
-  --color-secondary: #006c49;
+  /* Secondary = pure black (logo color, used for non-accent emphasis) */
+  --color-secondary: #000000;
   --color-on-secondary: #ffffff;
-  --color-secondary-container: #6cf8bb;
-  --color-on-secondary-container: #00714d;
-  --color-secondary-fixed: #6ffbbe;
-  --color-secondary-fixed-dim: #4edea3;
-  --color-on-secondary-fixed: #002113;
-  --color-on-secondary-fixed-variant: #005236;
+  --color-secondary-container: #f5f5f5;
+  --color-on-secondary-container: #000000;
+  --color-secondary-fixed: #ededed;
+  --color-secondary-fixed-dim: #d4d4d4;
+  --color-on-secondary-fixed: #000000;
+  --color-on-secondary-fixed-variant: #1a1a1a;
 
-  --color-tertiary: #943700;
+  /* Tertiary = mid gray */
+  --color-tertiary: #404040;
   --color-on-tertiary: #ffffff;
-  --color-tertiary-container: #bc4800;
-  --color-on-tertiary-container: #ffede6;
-  --color-tertiary-fixed: #ffdbcd;
-  --color-tertiary-fixed-dim: #ffb596;
-  --color-on-tertiary-fixed: #360f00;
-  --color-on-tertiary-fixed-variant: #7d2d00;
+  --color-tertiary-container: #f5f5f5;
+  --color-on-tertiary-container: #1a1a1a;
+  --color-tertiary-fixed: #ededed;
+  --color-tertiary-fixed-dim: #d4d4d4;
+  --color-on-tertiary-fixed: #000000;
+  --color-on-tertiary-fixed-variant: #1a1a1a;
 
-  --color-error: #ba1a1a;
+  --color-error: #dc2626;
   --color-on-error: #ffffff;
-  --color-error-container: #ffdad6;
-  --color-on-error-container: #93000a;
+  --color-error-container: #fee2e2;
+  --color-on-error-container: #7f1d1d;
 
-  --color-surface: #faf8ff;
-  --color-surface-dim: #d9d9e5;
-  --color-surface-bright: #faf8ff;
+  --color-surface: #ffffff;
+  --color-surface-dim: #e5e5e5;
+  --color-surface-bright: #ffffff;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f3f3fe;
-  --color-surface-container: #ededf9;
-  --color-surface-container-high: #e7e7f3;
-  --color-surface-container-highest: #e1e2ed;
-  --color-surface-variant: #e1e2ed;
-  --color-surface-tint: #0053db;
-  --color-on-surface: #191b23;
-  --color-on-surface-variant: #434655;
-  --color-inverse-surface: #2e3039;
-  --color-inverse-on-surface: #f0f0fb;
+  --color-surface-container-low: #fafafa;
+  --color-surface-container: #f5f5f5;
+  --color-surface-container-high: #ededed;
+  --color-surface-container-highest: #e5e5e5;
+  --color-surface-variant: #e5e5e5;
+  --color-surface-tint: #000000;
+  --color-on-surface: #000000;
+  --color-on-surface-variant: #525252;
+  --color-inverse-surface: #1a1a1a;
+  --color-inverse-on-surface: #fafafa;
 
-  --color-background: #faf8ff;
-  --color-on-background: #191b23;
+  --color-background: #ffffff;
+  --color-on-background: #000000;
 
-  --color-outline: #737686;
-  --color-outline-variant: #c3c6d7;
+  --color-outline: #a3a3a3;
+  --color-outline-variant: #d4d4d4;
 
-  /* Tier-specific accents (Bronze / Silver / Gold) */
-  --color-tier-bronze: #cd7f32;
-  --color-tier-silver: #9ca3af;
-  --color-tier-gold: #d4a017;
+  /* Tier accents → grayscale gradient (gold = strongest = darkest) */
+  --color-tier-bronze: #a3a3a3;
+  --color-tier-silver: #525252;
+  --color-tier-gold: #000000;
 
   /* === Spacing === */
   --spacing-xs: 4px;

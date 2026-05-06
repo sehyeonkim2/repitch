@@ -27,14 +27,14 @@ const ViewChip = ({ view, mobile = false }: { view: Exclude<View, "neutral">; mo
     : "hidden md:flex items-center gap-2 px-3 py-1 rounded-full";
   if (view === "brand") {
     return (
-      <div className={`${baseClasses} bg-primary-fixed text-on-primary-fixed-variant`}>
+      <div className={`${baseClasses} bg-on-surface text-surface`}>
         <span className="material-symbols-outlined !text-[16px]">domain</span>
         <span className="font-label-sm text-label-sm">브랜드 담당자 뷰</span>
       </div>
     );
   }
   return (
-    <div className={`${baseClasses} bg-secondary-container/40 text-on-secondary-container border border-secondary/30`}>
+    <div className={`${baseClasses} bg-surface text-on-surface border border-on-surface`}>
       <span className="material-symbols-outlined !text-[16px]">person</span>
       <span className="font-label-sm text-label-sm">인플루언서 뷰</span>
     </div>

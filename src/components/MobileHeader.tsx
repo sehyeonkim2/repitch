@@ -14,14 +14,14 @@ interface MobileHeaderProps {
 const ViewChip = ({ view }: { view: View }) => {
   if (view === "brand") {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-[10px] font-semibold">
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-on-surface text-surface text-[10px] font-semibold">
         <span className="material-symbols-outlined !text-[12px]">domain</span>
         브랜드
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-container/40 text-on-secondary-container border border-secondary/30 text-[10px] font-semibold">
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface text-on-surface border border-on-surface text-[10px] font-semibold">
       <span className="material-symbols-outlined !text-[12px]">person</span>
       인플루언서
     </span>

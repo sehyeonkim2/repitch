@@ -178,12 +178,12 @@ const CampaignDashboard = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" />
                 <XAxis
                   dataKey="date"
-                  tick={{ fontSize: 10, fill: "#666" }}
+                  tick={{ fontSize: 10, fill: "#525252" }}
                   tickFormatter={(v: string) => v.slice(5)}
                   interval="preserveStartEnd"
                 />
                 <YAxis
-                  tick={{ fontSize: 10, fill: "#666" }}
+                  tick={{ fontSize: 10, fill: "#525252" }}
                   width={40}
                   tickFormatter={(v: number) =>
                     v >= 1000000
@@ -207,7 +207,7 @@ const CampaignDashboard = () => {
                   type="monotone"
                   dataKey="views"
                   name="조회수"
-                  stroke="#004ac6"
+                  stroke="#2563eb"
                   strokeWidth={2}
                   dot={false}
                 />
@@ -215,7 +215,7 @@ const CampaignDashboard = () => {
                   type="monotone"
                   dataKey="likes"
                   name="좋아요"
-                  stroke="#006c49"
+                  stroke="#000000"
                   strokeWidth={2}
                   dot={false}
                 />
@@ -223,7 +223,7 @@ const CampaignDashboard = () => {
                   type="monotone"
                   dataKey="comments"
                   name="댓글"
-                  stroke="#b00020"
+                  stroke="#737373"
                   strokeWidth={2}
                   dot={false}
                 />
