@@ -62,11 +62,11 @@ const ProposalBody = ({ proposal }: { proposal: SubmittedProposal }) => {
 const SuccessModal = ({
   proposal,
   onClose,
-  onHome,
+  onCampaign,
 }: {
   proposal: SubmittedProposal;
   onClose: () => void;
-  onHome: () => void;
+  onCampaign: () => void;
 }) => (
   <motion.div
     initial={{ opacity: 0 }}
@@ -105,7 +105,7 @@ const SuccessModal = ({
         <div className="flex justify-between text-caption">
           <span className="text-on-surface-variant">계약 보수</span>
           <span className="text-on-surface font-medium">
-            {proposal.input.fee.toLocaleString("ko-KR")}원
+            {proposal.input.보수}
           </span>
         </div>
       </div>
@@ -113,8 +113,8 @@ const SuccessModal = ({
         <Button variant="ghost" fullWidth onClick={onClose}>
           닫기
         </Button>
-        <Button variant="primary" fullWidth icon="home" onClick={onHome}>
-          처음으로
+        <Button variant="primary" fullWidth icon="analytics" onClick={onCampaign}>
+          캠페인 성과 보기
         </Button>
       </div>
     </motion.div>
@@ -252,25 +252,25 @@ const BrandInbox = () => {
                 <div className="flex justify-between">
                   <span className="text-on-surface-variant">콘텐츠 포맷</span>
                   <span className="text-on-surface font-medium">
-                    {proposal.input.format}
+                    {proposal.input.콘텐츠_포맷}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-on-surface-variant">플랫폼</span>
+                  <span className="text-on-surface font-medium">
+                    {proposal.input.플랫폼}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-on-surface-variant">강조 타겟</span>
                   <span className="text-on-surface font-medium">
-                    {proposal.input.target}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-on-surface-variant">예상 게시</span>
-                  <span className="text-on-surface font-medium">
-                    {proposal.input.scheduledAt || "협의"}
+                    {proposal.input.타겟_소구점}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-on-surface-variant">희망 보수</span>
                   <span className="text-on-surface font-medium">
-                    {proposal.input.fee.toLocaleString("ko-KR")}원
+                    {proposal.input.보수}
                   </span>
                 </div>
               </div>
@@ -317,7 +317,7 @@ const BrandInbox = () => {
           <SuccessModal
             proposal={proposal}
             onClose={() => setDecision(null)}
-            onHome={() => navigate("/")}
+            onCampaign={() => navigate(`/brand/campaign/${proposal.id}`)}
           />
         )}
         {decision === "negotiate" && (

@@ -24,7 +24,10 @@ const CATEGORIES: Array<Category | "전체"> = [
   "뷰티",
   "패션",
   "식품",
-  "IT/앱서비스",
+  "헬스·피트니스",
+  "라이프스타일",
+  "전자기기",
+  "앱서비스",
 ];
 const AGES: Array<AgeBucket | "전체"> = [
   "전체",
@@ -247,6 +250,7 @@ const MatchingDashboard = () => {
   const { selectInfluencer } = useApp();
   const [filters, setFilters] = useState<MatchingFilters>(initialFilters);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const ranked = useMemo(
     () => rankInfluencers(filters, influencers, 8),
@@ -265,14 +269,37 @@ const MatchingDashboard = () => {
       <TopNav view="brand" />
 
       <div className="flex min-h-[calc(100vh-64px)]">
-        <aside className="bg-surface-container-lowest h-[calc(100vh-64px)] w-72 fixed left-0 top-16 overflow-y-auto border-r border-outline-variant flex flex-col p-lg space-y-md z-30">
-          <div>
-            <h2 className="font-headline-md text-headline-md text-on-surface mb-1">
-              브랜드 타겟 설정
-            </h2>
-            <p className="font-caption text-caption text-on-surface-variant">
-              조건을 바꾸면 추천 인플루언서가 즉시 재정렬됩니다.
-            </p>
+        {/* Mobile drawer backdrop */}
+        {drawerOpen && (
+          <div
+            className="lg:hidden fixed inset-0 top-16 bg-black/40 z-20"
+            onClick={() => setDrawerOpen(false)}
+            aria-hidden
+          />
+        )}
+
+        <aside
+          className={`bg-surface-container-lowest h-[calc(100vh-64px)] w-72 fixed left-0 top-16 overflow-y-auto border-r border-outline-variant flex flex-col p-lg space-y-md z-30 transition-transform duration-200 ${
+            drawerOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          }`}
+        >
+          <div className="flex items-start justify-between">
+            <div>
+              <h2 className="font-headline-md text-headline-md text-on-surface mb-1">
+                브랜드 타겟 설정
+              </h2>
+              <p className="font-caption text-caption text-on-surface-variant">
+                조건을 바꾸면 추천 인플루언서가 즉시 재정렬됩니다.
+              </p>
+            </div>
+            <button
+              type="button"
+              className="lg:hidden p-1 rounded-md hover:bg-surface-container-low text-on-surface-variant"
+              onClick={() => setDrawerOpen(false)}
+              aria-label="필터 닫기"
+            >
+              <Icon name="close" size={20} />
+            </button>
           </div>
           <div className="space-y-md">
             <FilterSelect
@@ -311,8 +338,8 @@ const MatchingDashboard = () => {
           </div>
         </aside>
 
-        <main className="flex-1 ml-72 p-lg bg-surface-container-low min-h-screen">
-          <header className="mb-lg flex items-end justify-between">
+        <main className="flex-1 lg:ml-72 p-lg bg-surface-container-low min-h-screen">
+          <header className="mb-lg flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
             <div>
               <h1 className="font-headline-lg text-headline-lg text-on-surface">
                 AI 추천 인플루언서 Top 매칭
@@ -321,9 +348,19 @@ const MatchingDashboard = () => {
                 선택하신 조건에 기반해 {ranked.length}명의 최적 파트너를 찾았습니다.
               </p>
             </div>
-            <Badge variant="secondary" icon="auto_awesome">
-              실시간 AI 매칭
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="secondary"
+                icon="tune"
+                onClick={() => setDrawerOpen(true)}
+                className="lg:!hidden"
+              >
+                필터 보기
+              </Button>
+              <Badge variant="secondary" icon="auto_awesome">
+                실시간 AI 매칭
+              </Badge>
+            </div>
           </header>
 
           {ranked.length === 0 ? (

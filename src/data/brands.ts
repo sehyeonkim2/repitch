@@ -37,7 +37,7 @@ export const brands: Brand[] = [
   {
     id: "brand_loop",
     name: "루프AI",
-    category: "IT/앱서비스",
+    category: "앱서비스",
     targetAge: "30대",
     tone: "정보전달형",
     budgetTier: "500~1000만원",
