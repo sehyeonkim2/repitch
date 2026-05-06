@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MobileHeader } from "../components/MobileHeader";
 import { StickyAction } from "../components/StickyAction";
@@ -175,7 +175,20 @@ const AuthDashboard = () => {
 
   return (
     <div className="flex flex-col min-h-full">
-      <MobileHeader title="사용자 인증" view="influencer" subtitle="진짜 사용자 인증 스코어" />
+      <MobileHeader
+        title="사용자 인증"
+        view="influencer"
+        subtitle="진짜 사용자 인증 스코어"
+        right={
+          <Link
+            to="/"
+            aria-label="처음으로"
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant"
+          >
+            <Icon name="home" />
+          </Link>
+        }
+      />
 
       <main className="flex-1 px-4 py-4 pb-24 space-y-4">
         {/* Score gauge card */}
@@ -341,9 +354,9 @@ const AuthDashboard = () => {
           size="lg"
           iconRight="arrow_forward"
           disabled={!anyDone}
-          onClick={() => navigate("/matching")}
+          onClick={() => navigate("/influencer/proposal")}
         >
-          매칭 화면으로 이동
+          제안서 작성하기
         </Button>
       </StickyAction>
     </div>

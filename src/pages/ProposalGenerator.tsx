@@ -8,6 +8,7 @@ import { Badge } from "../components/Badge";
 import { Button } from "../components/Button";
 import { Icon } from "../components/Icon";
 import { brands } from "../data/brands";
+import { influencers } from "../data/influencers";
 import { useApp } from "../state/AppContext";
 import { llmClient, buildBackupProposal } from "../lib/llmClient";
 import { exportElementAsPdf } from "../lib/pdfExport";
@@ -144,6 +145,12 @@ const ProposalGenerator = () => {
   const navigate = useNavigate();
   const { selectedInfluencer, submitProposal } = useApp();
 
+  // Influencer-only flow: when entering without a brand-side selection,
+  // treat the first dataset entry as the logged-in influencer's own profile.
+  const targetInfluencer = selectedInfluencer ?? influencers[0];
+  const targetReach = selectedInfluencer?.estimatedReach ?? Math.round(targetInfluencer.followers * 0.4);
+  const targetCtr = selectedInfluencer?.estimatedCtr ?? targetInfluencer.engagementRate;
+
   const defaultBrand = useMemo(
     () => brands.find((b) => b.category === selectedInfluencer?.category) ?? brands[0],
     [selectedInfluencer],
@@ -199,26 +206,6 @@ const ProposalGenerator = () => {
   const abortRef = useRef<AbortController | null>(null);
   const a4Ref = useRef<HTMLDivElement | null>(null);
 
-  if (!selectedInfluencer) {
-    return (
-      <div className="flex flex-col min-h-full">
-        <MobileHeader title="제안서 작성" view="influencer" />
-        <main className="flex-1 flex flex-col items-center justify-center text-center px-6 py-12">
-          <Icon name="person_search" size={48} className="!text-on-surface-variant" />
-          <h1 className="font-headline-md text-headline-md text-on-surface mt-4">
-            아직 작성한 역제안서가 없습니다
-          </h1>
-          <p className="font-body-md text-body-md text-on-surface-variant mt-2 mb-6">
-            매칭 화면에서 협업하고 싶은 브랜드를 골라 첫 제안서를 보내보세요.
-          </p>
-          <Button variant="primary" icon="explore" onClick={() => navigate("/matching")}>
-            매칭 화면으로 이동
-          </Button>
-        </main>
-      </div>
-    );
-  }
-
   const 핵심_키워드 = 핵심_키워드_text
     .split(",")
     .map((s) => s.trim())
@@ -236,7 +223,7 @@ const ProposalGenerator = () => {
     핵심_키워드,
     타겟_소구점,
     ...autoScores,
-    influencer: selectedInfluencer,
+    influencer: targetInfluencer,
     brand,
   });
 
@@ -259,8 +246,8 @@ const ProposalGenerator = () => {
     try {
       const stream = llmClient.streamProposal({
         input: buildInput(),
-        estimatedReach: selectedInfluencer.estimatedReach,
-        estimatedCtr: selectedInfluencer.estimatedCtr,
+        estimatedReach: targetReach,
+        estimatedCtr: targetCtr,
         signal: ctrl.signal,
       });
       for await (const chunk of stream) {
@@ -282,8 +269,8 @@ const ProposalGenerator = () => {
     setMode("preview");
     const text = buildBackupProposal(
       buildInput(),
-      selectedInfluencer.estimatedReach,
-      selectedInfluencer.estimatedCtr,
+      targetReach,
+      targetCtr,
     );
     setStreamedText(text);
   };
@@ -292,7 +279,7 @@ const ProposalGenerator = () => {
     if (!a4Ref.current) return;
     await exportElementAsPdf(
       a4Ref.current,
-      `repitch-${selectedInfluencer.handle}-제안서.pdf`,
+      `repitch-${targetInfluencer.handle}-제안서.pdf`,
     );
   };
 
@@ -302,15 +289,15 @@ const ProposalGenerator = () => {
     const proposal: SubmittedProposal = {
       id,
       createdAt: new Date().toISOString(),
-      influencer: selectedInfluencer,
+      influencer: targetInfluencer,
       brand,
       input: buildInput(),
       body: streamedText,
-      estimatedReach: selectedInfluencer.estimatedReach,
-      estimatedCtr: selectedInfluencer.estimatedCtr,
+      estimatedReach: targetReach,
+      estimatedCtr: targetCtr,
     };
     submitProposal(proposal);
-    navigate(`/proposal/sent/${id}`);
+    navigate(`/influencer/proposal/sent/${id}`);
   };
 
   useEffect(() => {
@@ -377,7 +364,7 @@ const ProposalGenerator = () => {
               </h1>
               <p className="text-caption text-on-surface-variant">{title}</p>
               <div className="mt-2 flex items-center justify-center gap-2 text-caption text-on-surface-variant flex-wrap">
-                <span className="font-medium text-on-surface">@{selectedInfluencer.handle}</span>
+                <span className="font-medium text-on-surface">@{targetInfluencer.handle}</span>
                 <Icon name="arrow_forward" size={14} />
                 <span className="font-medium text-on-surface">{브랜드명}</span>
               </div>
@@ -475,7 +462,7 @@ const ProposalGenerator = () => {
             </h1>
             <p className="text-on-surface-variant text-[14px]">{title}</p>
             <div className="mt-4 flex items-center justify-center gap-3 text-[12px] text-on-surface-variant">
-              <span className="font-medium text-on-surface">@{selectedInfluencer.handle}</span>
+              <span className="font-medium text-on-surface">@{targetInfluencer.handle}</span>
               <Icon name="arrow_forward" size={16} />
               <span className="font-medium text-on-surface">{브랜드명}</span>
               <span>· {브랜드_카테고리}</span>
@@ -500,7 +487,7 @@ const ProposalGenerator = () => {
 
   // ===== WIZARD MODE =====
   const handleBack = () => {
-    if (step === 1) navigate("/matching");
+    if (step === 1) navigate("/influencer/auth");
     else setStep((s) => (s - 1) as 1 | 2 | 3 | 4);
   };
 

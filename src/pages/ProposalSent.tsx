@@ -12,10 +12,10 @@ const ProposalSent = () => {
 
   useEffect(() => {
     if (!id || !getProposal(id)) {
-      const t = setTimeout(() => navigate("/proposal"), 800);
+      const t = setTimeout(() => navigate("/influencer/proposal"), 800);
       return () => clearTimeout(t);
     }
-    const t = setTimeout(() => navigate(`/brand/inbox/${id}`), 1700);
+    const t = setTimeout(() => navigate("/"), 2200);
     return () => clearTimeout(t);
   }, [id, navigate, getProposal]);
 
@@ -23,7 +23,7 @@ const ProposalSent = () => {
 
   return (
     <div className="flex flex-col min-h-full">
-      <MobileHeader title="전송 중" view="influencer" />
+      <MobileHeader title="전송 완료" view="influencer" />
       <main className="flex-1 flex flex-col items-center justify-center text-center px-6 py-12">
         <motion.div
           initial={{ scale: 0.6, opacity: 0 }}
@@ -39,11 +39,11 @@ const ProposalSent = () => {
           transition={{ delay: 0.2 }}
           className="font-headline-lg text-headline-lg text-on-surface mb-2"
         >
-          제안서를 전송 중...
+          제안서를 전송했어요
         </motion.h1>
         <p className="font-body-md text-body-md text-on-surface-variant mb-md">
           {proposal
-            ? `${proposal.brand.name} 담당자에게 안전하게 전달하고 있습니다.`
+            ? `${proposal.brand.name} 담당자에게 잘 전달됐습니다.`
             : "처리 중입니다."}
         </p>
         <div className="flex items-center gap-2">

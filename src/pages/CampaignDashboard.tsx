@@ -67,7 +67,7 @@ const CampaignDashboard = () => {
           <p className="font-body-md text-body-md text-on-surface-variant mt-2 mb-6">
             먼저 받은 제안서를 수락해야 캠페인 성과를 확인할 수 있습니다.
           </p>
-          <Button variant="primary" icon="arrow_back" onClick={() => navigate("/matching")}>
+          <Button variant="primary" icon="arrow_back" onClick={() => navigate("/brand/matching")}>
             매칭 화면으로 이동
           </Button>
         </main>

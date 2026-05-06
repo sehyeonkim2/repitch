@@ -1,26 +1,39 @@
 import { NavLink, useLocation } from "react-router-dom";
 
-const TABS = [
-  { to: "/", end: true, label: "인증", icon: "verified_user" },
-  { to: "/matching", end: false, label: "매칭", icon: "groups" },
-  { to: "/proposal", end: false, label: "제안서", icon: "description" },
-] as const;
+type Tab = { to: string; end?: boolean; label: string; icon: string };
+
+const INFLUENCER_TABS: Tab[] = [
+  { to: "/influencer/auth", label: "인증", icon: "verified_user" },
+  { to: "/influencer/proposal", label: "제안서", icon: "description" },
+];
+
+const BRAND_TABS: Tab[] = [
+  { to: "/brand/matching", label: "매칭", icon: "groups" },
+];
 
 const HIDE_PATTERNS = [
-  /^\/proposal\/sent\//,
+  /^\/$/,
+  /^\/influencer\/proposal\/sent\//,
   /^\/brand\/inbox\//,
   /^\/brand\/campaign\//,
 ];
 
 export const BottomTabBar = () => {
   const { pathname } = useLocation();
-  const hidden = HIDE_PATTERNS.some((re) => re.test(pathname));
-  if (hidden) return null;
+  if (HIDE_PATTERNS.some((re) => re.test(pathname))) return null;
+
+  let tabs: Tab[];
+  if (pathname.startsWith("/influencer")) tabs = INFLUENCER_TABS;
+  else if (pathname.startsWith("/brand")) tabs = BRAND_TABS;
+  else return null;
 
   return (
     <nav className="shrink-0 border-t border-outline-variant bg-surface-container-lowest/95 backdrop-blur-sm">
-      <ul className="grid grid-cols-3 h-16">
-        {TABS.map((tab) => (
+      <ul
+        className="grid h-16"
+        style={{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }}
+      >
+        {tabs.map((tab) => (
           <li key={tab.to}>
             <NavLink
               to={tab.to}

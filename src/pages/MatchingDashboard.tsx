@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { MobileHeader } from "../components/MobileHeader";
 import { Card } from "../components/Card";
@@ -267,16 +267,27 @@ const FilterModal = ({ open, filters, onChange, onClose, onReset }: FilterModalP
 
 const MatchingDashboard = () => {
   const navigate = useNavigate();
-  const { selectInfluencer } = useApp();
+  const { selectInfluencer, submittedProposals } = useApp();
   const [filters, setFilters] = useState<MatchingFilters>(initialFilters);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [filterOpen, setFilterOpen] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
 
   const ranked = useMemo(() => rankInfluencers(filters, influencers, 12), [filters]);
 
+  const proposalEntries = useMemo(
+    () =>
+      Object.values(submittedProposals).sort((a, b) =>
+        b.createdAt.localeCompare(a.createdAt),
+      ),
+    [submittedProposals],
+  );
+  const latestProposal = proposalEntries[0];
+
   const handleRequest = (inf: MatchedInfluencer) => {
     selectInfluencer(inf);
-    navigate("/proposal");
+    setToast(`@${inf.handle}님께 협업 요청을 보냈어요`);
+    setTimeout(() => setToast(null), 2400);
   };
 
   const handleReset = () => setFilters(initialFilters);
@@ -296,18 +307,48 @@ const MatchingDashboard = () => {
         title="AI 매칭"
         view="brand"
         right={
-          <button
-            type="button"
-            onClick={() => setFilterOpen(true)}
-            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface"
-            aria-label="필터"
-          >
-            <Icon name="tune" />
-          </button>
+          <>
+            <button
+              type="button"
+              onClick={() => setFilterOpen(true)}
+              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface"
+              aria-label="필터"
+            >
+              <Icon name="tune" />
+            </button>
+            <Link
+              to="/"
+              aria-label="처음으로"
+              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant"
+            >
+              <Icon name="home" />
+            </Link>
+          </>
         }
       />
 
       <main className="flex-1 px-4 py-3 pb-24 space-y-3">
+        {latestProposal && (
+          <button
+            type="button"
+            onClick={() => navigate(`/brand/inbox/${latestProposal.id}`)}
+            className="w-full flex items-center gap-3 bg-primary-container hover:bg-primary-container/80 active:scale-[0.99] transition rounded-2xl p-3 border border-primary/20 text-left"
+          >
+            <div className="shrink-0 w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center">
+              <Icon name="mark_email_unread" size={22} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="font-label-sm text-label-sm text-on-primary-container">
+                새 제안 {proposalEntries.length}건이 도착했어요
+              </div>
+              <div className="text-caption text-on-primary-container/80 truncate">
+                @{latestProposal.influencer.handle} · {latestProposal.brand.name}
+              </div>
+            </div>
+            <Icon name="arrow_forward" size={20} className="!text-on-primary-container shrink-0" />
+          </button>
+        )}
+
         {/* Active filter chips */}
         <div className="flex items-center gap-2 overflow-x-auto -mx-4 px-4 pb-1">
           <span className="text-caption text-on-surface-variant shrink-0">필터:</span>
@@ -386,6 +427,23 @@ const MatchingDashboard = () => {
         onClose={() => setFilterOpen(false)}
         onReset={handleReset}
       />
+
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            transition={{ duration: 0.2 }}
+            className="absolute left-4 right-4 bottom-20 z-40 pointer-events-none"
+          >
+            <div className="mx-auto max-w-[28rem] bg-on-surface text-surface px-4 py-3 rounded-xl shadow-lg flex items-center gap-2">
+              <Icon name="check_circle" size={20} className="!text-secondary shrink-0" />
+              <span className="font-label-sm text-label-sm">{toast}</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

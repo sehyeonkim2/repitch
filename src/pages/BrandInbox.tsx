@@ -164,8 +164,8 @@ const BrandInbox = () => {
           <p className="font-body-md text-body-md text-on-surface-variant mt-2 mb-6">
             세션이 만료되었거나 직접 URL에 접근하셨습니다.
           </p>
-          <Button variant="primary" icon="restart_alt" onClick={() => navigate("/")}>
-            처음으로 돌아가기
+          <Button variant="primary" icon="restart_alt" onClick={() => navigate("/brand/matching")}>
+            매칭 화면으로 돌아가기
           </Button>
         </main>
       </div>
@@ -178,7 +178,7 @@ const BrandInbox = () => {
     <div className="flex flex-col min-h-full bg-surface-container-low">
       <MobileHeader
         title="받은 제안"
-        back={() => navigate("/")}
+        back={() => navigate("/brand/matching")}
         view="brand"
         subtitle={`${proposal.brand.name} · ${new Date(proposal.createdAt).toLocaleDateString("ko-KR")}`}
       />
