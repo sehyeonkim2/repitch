@@ -24,7 +24,7 @@ Korean reverse-pitch (역제안) influencer marketing platform built for a 14-da
 
 ## Where things live
 
-- **Design tokens** → `src/index.css` `@theme` block. Grayscale + electric-blue accent matching the logo (primary `#2563eb`, secondary `#000000`, tier colors are a grayscale gradient — gold = darkest). Inter typography, custom spacing (`xs`/`sm`/`md`/`lg`/`xl`/`gutter`/`margin`).
+- **Design tokens** → `src/index.css` `@theme` block. Pure mono palette matching the logo wordmark (primary `#000000`, secondary `#000000`, surface scale `#fafafa`–`#e5e5e5`, tier colors are a grayscale gradient — gold = darkest). Inter typography, custom spacing (`xs`/`sm`/`md`/`lg`/`xl`/`gutter`/`margin`).
 - **Mock data** → `src/data/` (500 influencers, 5 brand templates, evidence samples, per-category proposal templates, deterministic synthetic campaign metrics).
 - **Business logic** → `src/lib/` (scoring 40/30/30, matching with reasons, mock LLM client, lazy PDF export).
 - **Cross-route state** → `src/state/AppContext.tsx`. Resets on hard refresh (acceptable for linear demo).

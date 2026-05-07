@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  /* === Colors (B&W + electric blue accent, matching the logo aesthetic) === */
-  /* Primary = electric blue accent (the one accent in the system) */
-  --color-primary: #2563eb;
+  /* === Colors (pure mono, matching the logo wordmark) === */
+  /* Primary = black. Interactive states lean on weight/borders/fills, not color shift. */
+  --color-primary: #000000;
   --color-on-primary: #ffffff;
-  --color-primary-container: #dbeafe;
-  --color-on-primary-container: #1e3a8a;
-  --color-primary-fixed: #dbeafe;
-  --color-primary-fixed-dim: #93c5fd;
-  --color-on-primary-fixed: #0a1f5c;
-  --color-on-primary-fixed-variant: #1d4ed8;
-  --color-inverse-primary: #93c5fd;
+  --color-primary-container: #f5f5f5;
+  --color-on-primary-container: #000000;
+  --color-primary-fixed: #ededed;
+  --color-primary-fixed-dim: #d4d4d4;
+  --color-on-primary-fixed: #000000;
+  --color-on-primary-fixed-variant: #000000;
+  --color-inverse-primary: #a3a3a3;
 
   /* Secondary = pure black (logo color, used for non-accent emphasis) */
   --color-secondary: #000000;

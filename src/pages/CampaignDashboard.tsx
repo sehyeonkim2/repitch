@@ -207,7 +207,7 @@ const CampaignDashboard = () => {
                   type="monotone"
                   dataKey="views"
                   name="조회수"
-                  stroke="#2563eb"
+                  stroke="#000000"
                   strokeWidth={2}
                   dot={false}
                 />
@@ -215,7 +215,7 @@ const CampaignDashboard = () => {
                   type="monotone"
                   dataKey="likes"
                   name="좋아요"
-                  stroke="#000000"
+                  stroke="#525252"
                   strokeWidth={2}
                   dot={false}
                 />
@@ -223,7 +223,7 @@ const CampaignDashboard = () => {
                   type="monotone"
                   dataKey="comments"
                   name="댓글"
-                  stroke="#737373"
+                  stroke="#a3a3a3"
                   strokeWidth={2}
                   dot={false}
                 />
