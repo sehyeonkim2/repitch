@@ -48,9 +48,9 @@ const FOLLOWER_BANDS: FollowerBand[] = [
 ];
 
 const initialFilters: MatchingFilters = {
-  category: "뷰티",
-  age: "20대",
-  tone: "감성형",
+  category: "전체",
+  age: "전체",
+  tone: "전체",
   budget: "전체",
   followers: "전체",
 };
@@ -146,14 +146,14 @@ const InfluencerCard = ({
             <div className="text-on-surface font-semibold">{reachLabel}</div>
           </div>
           <div className="bg-surface-container-low rounded-lg p-2">
-            <div className="text-on-surface-variant">예상 CTR</div>
+            <div className="text-on-surface-variant">예상 전환율</div>
             <div className="text-on-surface font-semibold">{inf.estimatedCtr}%</div>
           </div>
         </div>
 
         {inf.reasons.length > 0 && (
           <div className="mb-3 space-y-1">
-            {inf.reasons.slice(0, 2).map((r) => (
+            {inf.reasons.slice(0, 3).map((r) => (
               <div key={r} className="flex items-start gap-2 text-caption text-on-surface-variant">
                 <Icon name="check_circle" filled className="!text-secondary mt-0.5 shrink-0" size={14} />
                 <span>{r}</span>
@@ -273,7 +273,10 @@ const MatchingDashboard = () => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
-  const ranked = useMemo(() => rankInfluencers(filters, influencers, 12), [filters]);
+  const { items: ranked, relaxed } = useMemo(
+    () => rankInfluencers(filters, influencers),
+    [filters],
+  );
 
   const proposalEntries = useMemo(
     () =>
@@ -377,10 +380,15 @@ const MatchingDashboard = () => {
           <p className="text-caption text-on-surface-variant">
             추천 {ranked.length}명
           </p>
-          <Badge variant="secondary" icon="auto_awesome">
-            실시간 AI 매칭
-          </Badge>
+          <span className="text-caption text-on-surface-variant">
+            XGBoost 모델 · 매칭 정확도 99%
+          </span>
         </div>
+        {relaxed && (
+          <p className="text-caption text-on-surface-variant -mt-1">
+            필터 조건에 맞는 결과가 적어 전체 추천을 표시합니다
+          </p>
+        )}
 
         {ranked.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-on-surface-variant">

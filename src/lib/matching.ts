@@ -4,6 +4,7 @@ import type {
   MatchingFilters,
   FollowerBand,
 } from "../data/types";
+import { eMatchingResults } from "../data/matchingResults";
 
 const followerBand = (followers: number): FollowerBand => {
   if (followers < 10_000) return "나노 (1만 미만)";
@@ -12,95 +13,49 @@ const followerBand = (followers: number): FollowerBand => {
   return "메가 (50만+)";
 };
 
-interface ScoredInfluencer {
-  influencer: Influencer;
-  score: number;
-  reasons: string[];
+const matchesFilters = (inf: Influencer, filters: MatchingFilters): boolean => {
+  if (filters.category !== "전체" && inf.category !== filters.category) return false;
+  if (filters.age !== "전체" && inf.audienceAge !== filters.age) return false;
+  if (filters.tone !== "전체" && inf.tone !== filters.tone) return false;
+  if (filters.followers !== "전체" && followerBand(inf.followers) !== filters.followers)
+    return false;
+  return true;
+};
+
+export interface RankResult {
+  items: MatchedInfluencer[];
+  relaxed: boolean;
 }
-
-const scoreInfluencer = (
-  inf: Influencer,
-  filters: MatchingFilters,
-): ScoredInfluencer => {
-  let score = 30;
-  const reasons: string[] = [];
-
-  if (filters.category === "전체" || inf.category === filters.category) {
-    score += 30;
-    if (filters.category !== "전체") {
-      reasons.push(`${inf.category} 카테고리 전문성 적합`);
-    }
-  } else {
-    score -= 12;
-  }
-
-  if (filters.age === "전체" || inf.audienceAge === filters.age) {
-    score += 18;
-    if (filters.age !== "전체") {
-      reasons.push(`타겟 연령(${inf.audienceAge}) 일치율 92%`);
-    }
-  } else {
-    score -= 6;
-  }
-
-  if (filters.tone === "전체" || inf.tone === filters.tone) {
-    score += 10;
-    if (filters.tone !== "전체") {
-      reasons.push(`${inf.tone} 톤앤매너 매치`);
-    }
-  }
-
-  if (filters.followers === "전체" || followerBand(inf.followers) === filters.followers) {
-    score += 6;
-  } else {
-    score -= 3;
-  }
-
-  if (inf.engagementRate >= 5) {
-    score += 6;
-    reasons.push(`평균 참여율 ${inf.engagementRate}% (상위 15%)`);
-  } else if (inf.engagementRate >= 4) {
-    score += 3;
-  }
-
-  if (inf.recentGrowth >= 20) {
-    reasons.push(`최근 3개월 도달률 상승세 (+${inf.recentGrowth.toFixed(0)}%)`);
-    score += 4;
-  }
-
-  if (inf.verified) {
-    score += 2;
-  }
-
-  score = Math.max(45, Math.min(99, Math.round(score)));
-
-  if (reasons.length === 0) {
-    reasons.push(`${inf.category} 카테고리 활동량 우수`);
-  }
-
-  return { influencer: inf, score, reasons: reasons.slice(0, 3) };
-};
-
-const estimateReach = (inf: Influencer): number => {
-  return Math.round(inf.followers * (1.05 + inf.engagementRate * 0.04));
-};
-
-const estimateCtr = (inf: Influencer): number => {
-  return Math.round((inf.engagementRate * 0.55 + 0.6) * 10) / 10;
-};
 
 export const rankInfluencers = (
   filters: MatchingFilters,
   dataset: Influencer[],
-  topN = 10,
-): MatchedInfluencer[] => {
-  const scored = dataset.map((inf) => scoreInfluencer(inf, filters));
-  scored.sort((a, b) => b.score - a.score);
-  return scored.slice(0, topN).map(({ influencer, score, reasons }) => ({
-    ...influencer,
-    matchScore: score,
-    reasons,
-    estimatedReach: estimateReach(influencer),
-    estimatedCtr: estimateCtr(influencer),
-  }));
+): RankResult => {
+  const byId = new Map(dataset.map((inf) => [inf.id, inf]));
+
+  const all: MatchedInfluencer[] = [];
+  for (const e of eMatchingResults) {
+    const id = `inf_${String(e.ID).padStart(3, "0")}`;
+    const inf = byId.get(id);
+    if (!inf) continue;
+    all.push({
+      ...inf,
+      // Overlay E's ML feature values so downstream auto-injected scores in
+      // ProposalGenerator match what produced the matching score.
+      전문성: e.전문성,
+      신뢰성: e.신뢰성,
+      진정성: e.진정성,
+      스토리텔링: e.스토리텔링,
+      소비자_몰입: e.소비자_몰입,
+      브랜드_인플루언서_적합도: e.브랜드_인플루언서_적합도,
+      matchScore: Math.round(e.매칭스코어 * 100),
+      reasons: e.추천이유,
+      estimatedReach: e.예상도달수,
+      estimatedCtr: e.예상전환율,
+    });
+  }
+
+  const filtered = all.filter((inf) => matchesFilters(inf, filters));
+  if (filtered.length < 3) return { items: all, relaxed: true };
+  return { items: filtered, relaxed: false };
 };
