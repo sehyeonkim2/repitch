@@ -2,6 +2,8 @@
 
 Korean reverse-pitch (역제안) influencer marketing platform built for a 14-day startup competition demo. Live at https://repitch.vercel.app/.
 
+> **Read `docs/PROJECT_CONTEXT.md` first** for off-record team/role context, current status, and pending work. This file (CLAUDE.md) is the technical reference; `PROJECT_CONTEXT.md` is the situational brief.
+
 ## Constraints
 
 - **Backend is fully mocked.** No real API. JSON in `src/data/` + simulated delays in components. Don't introduce real fetch calls without explicit ask.

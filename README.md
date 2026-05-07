@@ -62,9 +62,27 @@ public/          로고 · 파비콘
 
 ## 백엔드
 
-전부 목(mock) 처리되어 있습니다. 실제 API 호출은 없고, `src/data/`의 JSON과 컴포넌트 안의 시뮬레이션 딜레이로 동작합니다.
+`main` 브랜치는 전부 목(mock)으로 동작합니다. `src/data/`의 JSON과 컴포넌트 안의 시뮬레이션 딜레이로 백엔드 없이 데모가 돌아갑니다.
 
-`src/lib/llmClient.ts`의 `streamProposal()`이 `AsyncIterable<string>`을 반환합니다. 현재는 `mockClient`(템플릿 기반 스트리밍)를 사용하지만, 실제 Claude / GPT-4o 엔드포인트가 준비되면 `llmClient` export만 교체하면 됩니다.
+실제 API 연결은 `backend-ready` 브랜치에 미리 준비되어 있습니다. `src/lib/api/`에 mock/real 토글 가능한 서비스 레이어가 있고, 5개 페이지(인증·매칭·제안·인박스·캠페인)가 모두 그 레이어를 통해서 데이터를 받도록 배선돼 있습니다.
+
+## 백엔드 연동 (실제 API 붙일 때)
+
+백엔드 담당자가 서버 배포를 끝내고 엔드포인트 스펙을 공유하면, 아래 4단계로 연결합니다.
+
+1. **Vercel 환경변수 설정** — Vercel 대시보드 → Project Settings → Environment Variables에 두 개 추가:
+   - `VITE_API_BASE_URL` = 백엔드 배포 URL (예: `https://repitch-api.fly.dev`)
+   - `VITE_DISABLE_MOCK` = `true`
+2. **`backend-ready` 브랜치를 `main`으로 머지**:
+   ```bash
+   git checkout main
+   git merge backend-ready
+   git push
+   ```
+3. **Vercel 자동 재배포** — GitHub push 시 자동으로 빌드·배포됩니다.
+4. **확인** — `repitch.vercel.app`에서 인플루언서 매칭·제안서 생성을 클릭해서 실제 API 응답이 흐르는지 확인.
+
+엔드포인트 계약은 `src/lib/api/*.ts`의 주석에 정리되어 있습니다 (`/influencers/search`, `/proposal/generate`, `/auth/score/*`, `/proposals`, `/campaigns/*`). 요청 바디·응답 형태가 다르면 백엔드 담당자와 맞춥니다.
 
 ## 디자인 시스템
 
