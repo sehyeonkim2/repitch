@@ -10,10 +10,12 @@
 
 ## 데모 플로우 (약 3분)
 
-1. **인증** — 인플루언서가 영수증 OCR + 실사용 사진 + SNS 후기로 진짜 사용자임을 증명 (40/30/30 가중합 → Bronze/Silver/Gold 등급 → "Re:Pitch Certified Real User" 마크 부여)
-2. **AI 매칭** — 브랜드 측 대시보드에서 카테고리·타겟 연령·톤앤매너·예산·팔로워 규모로 인플루언서 추천 순위 산출
-3. **제안서 작성** — 인플루언서가 요청받은 브랜드에 역제안서를 작성. 스트리밍 AI 생성 + PDF 내보내기 지원
-4. **브랜드 수신** — 브랜드가 제안서 검토 후 수락 / 거절 / 협의 요청
+1. **역할 선택** — 시작 화면에서 인플루언서 / 기업 진입 분기
+2. **인증** — 인플루언서가 영수증 OCR + 실사용 사진 + SNS 후기로 진짜 사용자임을 증명 (40/30/30 가중합 → Bronze/Silver/Gold 등급 → "Re:Pitch Certified Real User" 마크 부여)
+3. **AI 매칭** — 브랜드 측 대시보드에서 카테고리·타겟 연령·톤앤매너·예산·팔로워 규모로 인플루언서 추천 순위 산출
+4. **제안서 작성** — 인플루언서가 요청받은 브랜드에 4스텝 위저드로 역제안서 작성. 스트리밍 AI 생성 + PDF 내보내기 지원
+5. **브랜드 수신** — 브랜드가 제안서 검토 후 수락 / 거절 / 협의 요청
+6. **캠페인 성과** — 수락 시 30일치 합성 지표(조회/좋아요/댓글)와 콘텐츠 카드를 보여주는 대시보드 진입
 
 ## 빠른 시작
 
@@ -36,24 +38,26 @@ npm run lint
 
 | 경로 | 컴포넌트 | 역할 |
 |---|---|---|
-| `/` | `AuthDashboard` | 인플루언서 뷰 |
-| `/matching` | `MatchingDashboard` | 브랜드 담당자 뷰 |
-| `/proposal` | `ProposalGenerator` | 인플루언서 뷰 |
-| `/proposal/sent/:id` | `ProposalSent` | 인플루언서 뷰 (전송 중) |
+| `/` | `RoleSelect` | 시작 화면 (역할 선택) |
+| `/influencer/auth` | `AuthDashboard` | 인플루언서 뷰 |
+| `/influencer/proposal` | `ProposalGenerator` | 인플루언서 뷰 (4스텝 위저드) |
+| `/influencer/proposal/sent/:id` | `ProposalSent` | 인플루언서 뷰 (전송 중) |
+| `/brand/matching` | `MatchingDashboard` | 브랜드 담당자 뷰 |
 | `/brand/inbox/:id` | `BrandInbox` | 브랜드 담당자 뷰 |
+| `/brand/campaign/:id` | `CampaignDashboard` | 브랜드 담당자 뷰 (성과 대시보드) |
 
 ## 디렉토리 구조
 
 ```
 src/
-  components/    TopNav · Card · Badge · Button · Gauge · Icon
-  data/          influencers (30명) · brands (5개) · authEvidenceSamples · proposalTemplates
+  components/    MobileShell · MobileHeader · BottomTabBar · StickyAction · Card · Badge · Button · Gauge · Icon
+  data/          influencers (500명) · brands (5개) · authEvidenceSamples · proposalTemplates · campaignMetrics
   lib/           scoring · matching · llmClient · pdfExport
-  pages/         5개 라우트 컴포넌트
+  pages/         7개 라우트 컴포넌트
   state/         AppContext (라우트 간 상태, 새로고침 시 초기화)
   index.css      @theme 토큰 정의 (컬러 / 타이포그래피 / 스페이싱)
 docs/            요구사항 PDF + 팀 역할 분배 문서
-public/          파비콘 / 아이콘
+public/          로고 · 파비콘
 ```
 
 ## 백엔드
@@ -64,7 +68,7 @@ public/          파비콘 / 아이콘
 
 ## 디자인 시스템
 
-`src/index.css`의 `@theme` 블록에 모든 토큰이 정의되어 있습니다. Trustworthy Blue `#004ac6` 프라이머리, Emerald Green `#006c49` 세컨더리, Material 3 스타일의 surface 스케일, Inter 타이포그래피, 8px 그리드 스페이싱, 기본 12px 모서리 곡률. 원본 스펙은 `docs/`에서 확인할 수 있습니다.
+`src/index.css`의 `@theme` 블록에 모든 토큰이 정의되어 있습니다. 로고 무드를 따라 흑백 그레이스케일 + 일렉트릭 블루 액센트 (`#2563eb` 프라이머리, `#000000` 세컨더리), Material 3 스타일의 surface 스케일, Inter 타이포그래피, 8px 그리드 스페이싱, 기본 12px 모서리 곡률. 원본 스펙은 `docs/`에서 확인할 수 있습니다.
 
 ## 라이선스
 
