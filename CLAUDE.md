@@ -25,7 +25,7 @@ Korean reverse-pitch (역제안) influencer marketing platform built for a 14-da
 ## Where things live
 
 - **Design tokens** → `src/index.css` `@theme` block. Pure mono palette matching the logo wordmark (primary `#000000`, secondary `#000000`, surface scale `#fafafa`–`#e5e5e5`, tier colors are a grayscale gradient — gold = darkest). Inter typography, custom spacing (`xs`/`sm`/`md`/`lg`/`xl`/`gutter`/`margin`).
-- **Mock data** → `src/data/` (500 influencers, 5 brand templates, evidence samples, per-category proposal templates, deterministic synthetic campaign metrics).
+- **Mock data** → `src/data/` (500 influencers, 10 brand templates, evidence samples, per-category proposal templates, deterministic synthetic campaign metrics).
 - **Business logic** → `src/lib/` (scoring 40/30/30, matching with reasons, mock LLM client, lazy PDF export).
 - **Cross-route state** → `src/state/AppContext.tsx`. Resets on hard refresh (acceptable for linear demo).
 - **Source-of-truth specs** → `docs/`:
@@ -55,7 +55,7 @@ Korean reverse-pitch (역제안) influencer marketing platform built for a 14-da
 
 - Replace `mockClient` in `src/lib/llmClient.ts` with a `realClient` that calls C's `/proposal/generate` SSE endpoint. The interface (`streamProposal(args): AsyncIterable<string>`) doesn't change. A `backend-ready` branch already exists with a service-layer toggle scaffold.
 - `src/data/influencers.ts` already has the full 500-row dataset.
-- Extend `src/data/brands.ts` from 5 to the spec'd 10 templates.
+- `src/data/brands.ts` already has the spec'd 10 templates.
 - Drop pre-baked PDFs into `public/backup-proposals/` for the demo-network-failure escape hatch.
 
 ## Don't

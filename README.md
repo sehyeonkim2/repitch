@@ -51,7 +51,7 @@ npm run lint
 ```
 src/
   components/    MobileShell · MobileHeader · BottomTabBar · StickyAction · Card · Badge · Button · Gauge · Icon
-  data/          influencers (500명) · brands (5개) · authEvidenceSamples · proposalTemplates · campaignMetrics
+  data/          influencers (500명) · brands (10개) · authEvidenceSamples · proposalTemplates · campaignMetrics
   lib/           scoring · matching · llmClient · pdfExport
   pages/         7개 라우트 컴포넌트
   state/         AppContext (라우트 간 상태, 새로고침 시 초기화)
