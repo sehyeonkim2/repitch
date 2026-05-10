@@ -6,6 +6,10 @@ import type {
   SubmittedProposal,
 } from "../data/types";
 import type { ScoreBreakdown } from "../lib/scoring";
+import {
+  defaultSampleProducts,
+  type SampleProduct,
+} from "../data/sampleProducts";
 
 export interface ChatMessage {
   id: string;
@@ -27,12 +31,14 @@ interface AppState {
   selectedInfluencer: MatchedInfluencer | null;
   submittedProposals: Record<string, SubmittedProposal>;
   chatRooms: Record<string, ChatRoom>;
+  sampleProducts: SampleProduct[];
   setAuthScore: (s: ScoreBreakdown | null) => void;
   selectInfluencer: (inf: MatchedInfluencer | null) => void;
   submitProposal: (proposal: SubmittedProposal) => void;
   getProposal: (id: string) => SubmittedProposal | null;
   createChatRoom: (proposalId: string, influencer: Influencer, initialMsg: string) => string;
   sendMessage: (roomId: string, text: string, sender: "brand" | "influencer") => void;
+  addSampleProduct: (product: Omit<SampleProduct, "id" | "createdAt">) => void;
 }
 
 const AppContext = createContext<AppState | null>(null);
@@ -45,6 +51,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     Record<string, SubmittedProposal>
   >({});
   const [chatRooms, setChatRooms] = useState<Record<string, ChatRoom>>({});
+  const [sampleProducts, setSampleProducts] = useState<SampleProduct[]>(defaultSampleProducts);
 
   const selectInfluencer = useCallback((inf: MatchedInfluencer | null) => {
     setSelectedInfluencer(inf);
@@ -81,6 +88,16 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     [],
   );
 
+  const addSampleProduct = useCallback(
+    (product: Omit<SampleProduct, "id" | "createdAt">) => {
+      setSampleProducts((prev) => [
+        ...prev,
+        { ...product, id: `sp_${Date.now()}`, createdAt: new Date().toISOString() },
+      ]);
+    },
+    [],
+  );
+
   const sendMessage = useCallback(
     (roomId: string, text: string, sender: "brand" | "influencer") => {
       setChatRooms((prev) => {
@@ -104,23 +121,27 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       selectedInfluencer,
       submittedProposals,
       chatRooms,
+      sampleProducts,
       setAuthScore,
       selectInfluencer,
       submitProposal,
       getProposal,
       createChatRoom,
       sendMessage,
+      addSampleProduct,
     }),
     [
       authScore,
       selectedInfluencer,
       submittedProposals,
       chatRooms,
+      sampleProducts,
       selectInfluencer,
       submitProposal,
       getProposal,
       createChatRoom,
       sendMessage,
+      addSampleProduct,
     ],
   );
 

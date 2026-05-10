@@ -3,13 +3,21 @@ import { useApp } from "../state/AppContext";
 
 type Tab = { to: string; end?: boolean; label: string; icon: string };
 
-const INFLUENCER_TABS: Tab[] = [
+const INFLUENCER_TABS_BASE: Tab[] = [
   { to: "/influencer/auth", label: "인증", icon: "verified_user" },
-  { to: "/influencer/proposal", label: "제안서", icon: "description" },
+  { to: "/influencer/samples", label: "Samples", icon: "storefront" },
 ];
+const PROPOSAL_TAB: Tab = { to: "/influencer/proposal", label: "제안서", icon: "description" };
 
 const BRAND_TABS: Tab[] = [
   { to: "/brand/matching", label: "매칭", icon: "groups" },
+  { to: "/brand/chat", label: "Chat", icon: "chat_bubble" },
+];
+
+const STARTUP_TABS: Tab[] = [
+  { to: "/brand/startup", end: true, label: "홈", icon: "home" },
+  { to: "/brand/startup/upload", label: "제품등록", icon: "add_box" },
+  { to: "/brand/startup/inbox", label: "수령함", icon: "inbox" },
   { to: "/brand/chat", label: "Chat", icon: "chat_bubble" },
 ];
 
@@ -29,11 +37,16 @@ export const BottomTabBar = () => {
 
   let tabs: Tab[];
   if (pathname.startsWith("/influencer")) {
-    tabs = INFLUENCER_TABS.filter(
-      (t) => t.to !== "/influencer/proposal" || isAuthDone,
-    );
-  } else if (pathname.startsWith("/brand")) tabs = BRAND_TABS;
-  else return null;
+    tabs = isAuthDone
+      ? [...INFLUENCER_TABS_BASE, PROPOSAL_TAB]
+      : INFLUENCER_TABS_BASE;
+  } else if (pathname.startsWith("/brand/startup")) {
+    tabs = STARTUP_TABS;
+  } else if (pathname.startsWith("/brand")) {
+    tabs = BRAND_TABS;
+  } else {
+    return null;
+  }
 
   return (
     <nav className="shrink-0 bg-background px-4 pb-5 pt-2">

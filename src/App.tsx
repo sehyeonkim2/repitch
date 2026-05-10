@@ -10,6 +10,12 @@ import BrandInbox from "./pages/BrandInbox";
 import CampaignDashboard from "./pages/CampaignDashboard";
 import ChatList from "./pages/ChatList";
 import ChatRoom from "./pages/ChatRoom";
+import SamplesPage from "./pages/SamplesPage";
+import SampleDetail from "./pages/SampleDetail";
+import StartupHome from "./pages/StartupHome";
+import StartupProductUpload from "./pages/StartupProductUpload";
+import StartupInbox from "./pages/StartupInbox";
+import StartupSendProposal from "./pages/StartupSendProposal";
 
 function App() {
   return (
@@ -26,6 +32,12 @@ function App() {
             <Route path="/brand/campaign/:id" element={<CampaignDashboard />} />
             <Route path="/brand/chat" element={<ChatList />} />
             <Route path="/brand/chat/:id" element={<ChatRoom />} />
+            <Route path="/influencer/samples" element={<SamplesPage />} />
+            <Route path="/influencer/samples/:id" element={<SampleDetail />} />
+            <Route path="/brand/startup" element={<StartupHome />} />
+            <Route path="/brand/startup/upload" element={<StartupProductUpload />} />
+            <Route path="/brand/startup/inbox" element={<StartupInbox />} />
+            <Route path="/brand/startup/send" element={<StartupSendProposal />} />
           </Routes>
         </MobileShell>
       </Router>
