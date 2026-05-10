@@ -59,7 +59,7 @@ const EVIDENCE_META: EvidenceMeta[] = [
 ];
 
 const ReceiptResultCard = () => (
-  <div className="bg-surface-container-low border border-outline-variant rounded-lg p-4 space-y-2">
+  <div className="bg-surface-container-low rounded-xl p-4 space-y-2">
     <div className="flex justify-between text-caption">
       <span className="text-on-surface-variant">매장</span>
       <span className="text-on-surface font-medium">{sampleReceipt.merchant}</span>
@@ -86,8 +86,8 @@ const ReceiptResultCard = () => (
 );
 
 const PhotoResultCard = () => (
-  <div className="bg-surface-container-low border border-outline-variant rounded-lg p-4 space-y-3">
-    <div className="relative h-32 rounded-md bg-gradient-to-br from-surface-container-high to-surface-dim flex items-center justify-center overflow-hidden">
+  <div className="bg-surface-container-low rounded-xl p-4 space-y-3">
+    <div className="relative h-32 rounded-xl bg-gradient-to-br from-surface-container-high to-surface-dim flex items-center justify-center overflow-hidden">
       <svg width="80" height="100" viewBox="0 0 80 100" className="text-primary/40">
         <rect x="20" y="10" width="40" height="80" rx="4" fill="currentColor" />
         <rect x="28" y="20" width="24" height="40" rx="2" fill="white" opacity="0.4" />
@@ -98,13 +98,13 @@ const PhotoResultCard = () => (
       </span>
     </div>
     <div className="grid grid-cols-2 gap-2 text-caption">
-      <div className="bg-surface-container-lowest border border-outline-variant rounded p-2">
+      <div className="bg-white rounded-lg p-2 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
         <div className="text-on-surface-variant">마모도</div>
         <div className="text-on-surface font-semibold">
           {(samplePhoto.wearScore * 100).toFixed(0)}%
         </div>
       </div>
-      <div className="bg-surface-container-lowest border border-outline-variant rounded p-2">
+      <div className="bg-white rounded-lg p-2 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
         <div className="text-on-surface-variant">잔량</div>
         <div className="text-on-surface font-semibold">{samplePhoto.remainingPct}%</div>
       </div>
@@ -116,7 +116,7 @@ const PhotoResultCard = () => (
 );
 
 const SnsResultCard = () => (
-  <div className="bg-surface-container-low border border-outline-variant rounded-lg p-4 space-y-3">
+  <div className="bg-surface-container-low rounded-xl p-4 space-y-3">
     <div className="flex items-center justify-between">
       <span className="text-caption text-on-surface-variant">감성 점수</span>
       <span className="font-headline-md text-secondary">{sampleSns.sentimentScore}</span>
@@ -302,12 +302,12 @@ const AuthDashboard = () => {
                   onChange={(e) => setSnsUrl(e.target.value)}
                   placeholder="https://instagram.com/p/..."
                   type="url"
-                  className="w-full h-11 px-3 rounded-lg bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none mb-3 font-body-md text-body-md"
+                  className="w-full h-12 px-5 rounded-full bg-surface-container-low border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none mb-3 font-body-md text-body-md"
                 />
               )}
 
               {meta.type !== "sns" && s === "idle" && (
-                <div className="border-2 border-dashed border-outline-variant rounded-lg h-24 flex flex-col items-center justify-center text-on-surface-variant text-caption mb-3 bg-surface-container-low">
+                <div className="border-2 border-dashed border-outline-variant rounded-xl h-24 flex flex-col items-center justify-center text-on-surface-variant text-caption mb-3 bg-surface-container-low">
                   <Icon name="upload_file" size={28} />
                   <span className="mt-1">파일을 끌어다 놓거나 탭</span>
                 </div>

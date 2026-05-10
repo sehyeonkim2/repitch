@@ -24,7 +24,7 @@ const RoleSelect = () => (
         {/* Influencer = outlined card (white bg, thick black border) */}
         <Link
           to="/influencer/auth"
-          className="group bg-surface hover:bg-surface-container-low active:scale-[0.98] transition rounded-2xl p-5 border-2 border-on-surface flex items-center gap-4"
+          className="group bg-white active:scale-[0.98] transition-all rounded-2xl p-5 border-2 border-on-surface flex items-center gap-4 shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
         >
           <div className="shrink-0 w-14 h-14 rounded-2xl bg-surface border-2 border-on-surface text-on-surface flex items-center justify-center">
             <Icon name="person" size={28} />
@@ -47,7 +47,7 @@ const RoleSelect = () => (
         {/* Brand = solid black card (logo aesthetic) */}
         <Link
           to="/brand/matching"
-          className="group bg-on-surface hover:bg-on-surface/90 active:scale-[0.98] transition rounded-2xl p-5 flex items-center gap-4"
+          className="group bg-on-surface hover:bg-[#1a1a1a] active:scale-[0.98] transition-all rounded-2xl p-5 flex items-center gap-4 shadow-[0_4px_20px_rgba(0,0,0,0.18)]"
         >
           <div className="shrink-0 w-14 h-14 rounded-2xl bg-surface text-on-surface flex items-center justify-center">
             <Icon name="domain" size={28} />

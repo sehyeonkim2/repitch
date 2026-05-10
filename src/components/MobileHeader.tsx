@@ -36,8 +36,8 @@ export const MobileHeader = ({ title, back, view, right, subtitle }: MobileHeade
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-outline-variant">
-      <div className="h-14 px-3 flex items-center gap-2">
+    <header className="sticky top-0 z-30 bg-background">
+      <div className="h-16 px-4 flex items-center gap-2">
         {back ? (
           <button
             type="button"

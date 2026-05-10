@@ -19,7 +19,7 @@ export const Card = ({ children, accent, className = "", ...rest }: CardProps) =
     : "";
   return (
     <div
-      className={`relative bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm ${accentLayer} ${className}`}
+      className={`relative bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] ${accentLayer} ${className}`}
       {...rest}
     >
       {children}

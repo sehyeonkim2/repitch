@@ -70,7 +70,7 @@ const FilterSelect = <T extends string>({
     <label className="block font-label-sm text-label-sm text-on-surface mb-2">{label}</label>
     <div className="relative">
       <select
-        className="w-full h-12 appearance-none bg-surface-container-lowest border border-outline-variant rounded-lg pl-4 pr-10 focus:border-primary focus:ring-1 focus:ring-primary outline-none font-body-md text-body-md text-on-surface cursor-pointer"
+        className="w-full h-12 appearance-none bg-surface-container-low border border-outline-variant rounded-2xl pl-5 pr-10 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none font-body-md text-body-md text-on-surface cursor-pointer"
         value={value}
         onChange={(e) => onChange(e.target.value as T)}
       >
@@ -133,19 +133,19 @@ const InfluencerCard = ({
         </div>
 
         <div className="grid grid-cols-2 gap-2 text-caption mb-3">
-          <div className="bg-surface-container-low rounded-lg p-2">
+          <div className="bg-surface-container-low rounded-xl p-2">
             <div className="text-on-surface-variant">팔로워</div>
             <div className="text-on-surface font-semibold">{followerLabel}</div>
           </div>
-          <div className="bg-surface-container-low rounded-lg p-2">
+          <div className="bg-surface-container-low rounded-xl p-2">
             <div className="text-on-surface-variant">참여율</div>
             <div className="text-on-surface font-semibold">{inf.engagementRate}%</div>
           </div>
-          <div className="bg-surface-container-low rounded-lg p-2">
+          <div className="bg-surface-container-low rounded-xl p-2">
             <div className="text-on-surface-variant">예상 도달</div>
             <div className="text-on-surface font-semibold">{reachLabel}</div>
           </div>
-          <div className="bg-surface-container-low rounded-lg p-2">
+          <div className="bg-surface-container-low rounded-xl p-2">
             <div className="text-on-surface-variant">예상 전환율</div>
             <div className="text-on-surface font-semibold">{inf.estimatedCtr}%</div>
           </div>
@@ -201,10 +201,10 @@ const FilterModal = ({ open, filters, onChange, onClose, onReset }: FilterModalP
           animate={{ y: 0 }}
           exit={{ y: "100%" }}
           transition={{ type: "spring", damping: 28, stiffness: 280 }}
-          className="bg-surface-container-lowest w-full max-w-[440px] rounded-t-3xl sm:rounded-3xl border-t border-outline-variant max-h-[85vh] flex flex-col"
+          className="bg-white w-full max-w-[440px] rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col shadow-[0_-8px_40px_rgba(0,0,0,0.12)]"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex items-center justify-between px-4 py-3 border-b border-outline-variant">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-outline-variant/60">
             <button
               type="button"
               onClick={onReset}

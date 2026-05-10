@@ -35,7 +35,7 @@ const ProposalBody = ({ proposal }: { proposal: SubmittedProposal }) => {
   if (current) sections.push(current);
 
   return (
-    <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5">
+    <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.07)] p-5">
       <div className="border-b-2 border-on-surface pb-4 mb-5 text-center">
         <h1 className="font-headline-md text-headline-md text-on-surface mb-1">
           Re:Pitch 역제안서
@@ -77,7 +77,7 @@ const SuccessModal = ({
       initial={{ scale: 0.9, opacity: 0, y: 16 }}
       animate={{ scale: 1, opacity: 1, y: 0 }}
       exit={{ scale: 0.9, opacity: 0 }}
-      className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-xl max-w-[28rem] w-full p-lg text-center"
+      className="bg-white rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.18)] max-w-[28rem] w-full p-lg text-center"
     >
       <div className="w-16 h-16 mx-auto rounded-full bg-secondary-container/40 border-2 border-secondary flex items-center justify-center mb-md">
         <Icon name="celebration" filled className="!text-secondary" size={32} />
@@ -88,7 +88,7 @@ const SuccessModal = ({
       <p className="font-body-md text-body-md text-on-surface-variant mb-md">
         {proposal.brand.name}이 @{proposal.influencer.handle}님의 제안을 수락했습니다.
       </p>
-      <div className="bg-surface-container-low rounded-lg p-4 mb-md text-left space-y-2">
+      <div className="bg-surface-container-low rounded-xl p-4 mb-md text-left space-y-2">
         <div className="flex justify-between text-caption">
           <span className="text-on-surface-variant">예상 도달</span>
           <span className="text-on-surface font-medium">
@@ -209,23 +209,23 @@ const BrandInbox = () => {
             Re:Pitch Certified Real User
           </Badge>
           <div className="grid grid-cols-2 gap-2 text-caption">
-            <div className="bg-surface-container-low rounded-lg p-2">
+            <div className="bg-surface-container-low rounded-xl p-2">
               <div className="text-on-surface-variant">팔로워</div>
               <div className="text-on-surface font-semibold">
                 {inf.followers.toLocaleString("ko-KR")}
               </div>
             </div>
-            <div className="bg-surface-container-low rounded-lg p-2">
+            <div className="bg-surface-container-low rounded-xl p-2">
               <div className="text-on-surface-variant">참여율</div>
               <div className="text-on-surface font-semibold">{inf.engagementRate}%</div>
             </div>
-            <div className="bg-surface-container-low rounded-lg p-2">
+            <div className="bg-surface-container-low rounded-xl p-2">
               <div className="text-on-surface-variant">예상 도달</div>
               <div className="text-on-surface font-semibold">
                 {proposal.estimatedReach.toLocaleString("ko-KR")}
               </div>
             </div>
-            <div className="bg-surface-container-low rounded-lg p-2">
+            <div className="bg-surface-container-low rounded-xl p-2">
               <div className="text-on-surface-variant">예상 CTR</div>
               <div className="text-on-surface font-semibold">{proposal.estimatedCtr}%</div>
             </div>
@@ -299,7 +299,7 @@ const BrandInbox = () => {
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="bg-surface-container-lowest rounded-xl border border-outline-variant max-w-[28rem] w-full p-lg text-center"
+              className="bg-white rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.18)] max-w-[28rem] w-full p-lg text-center"
               onClick={(e) => e.stopPropagation()}
             >
               <Icon name="forum" filled className="!text-primary mb-3" size={32} />
@@ -326,7 +326,7 @@ const BrandInbox = () => {
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="bg-surface-container-lowest rounded-xl border border-outline-variant max-w-[28rem] w-full p-lg text-center"
+              className="bg-white rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.18)] max-w-[28rem] w-full p-lg text-center"
               onClick={(e) => e.stopPropagation()}
             >
               <Icon name="block" className="!text-error mb-3" size={32} />
