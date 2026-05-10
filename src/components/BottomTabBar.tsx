@@ -1,4 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
+import { useApp } from "../state/AppContext";
 
 type Tab = { to: string; end?: boolean; label: string; icon: string };
 
@@ -21,11 +22,17 @@ const HIDE_PATTERNS = [
 
 export const BottomTabBar = () => {
   const { pathname } = useLocation();
+  const { authScore } = useApp();
   if (HIDE_PATTERNS.some((re) => re.test(pathname))) return null;
 
+  const isAuthDone = authScore !== null && authScore.total > 0;
+
   let tabs: Tab[];
-  if (pathname.startsWith("/influencer")) tabs = INFLUENCER_TABS;
-  else if (pathname.startsWith("/brand")) tabs = BRAND_TABS;
+  if (pathname.startsWith("/influencer")) {
+    tabs = INFLUENCER_TABS.filter(
+      (t) => t.to !== "/influencer/proposal" || isAuthDone,
+    );
+  } else if (pathname.startsWith("/brand")) tabs = BRAND_TABS;
   else return null;
 
   return (
