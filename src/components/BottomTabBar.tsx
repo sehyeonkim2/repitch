@@ -5,7 +5,7 @@ type Tab = { to: string; end?: boolean; label: string; icon: string };
 
 const INFLUENCER_TABS_BASE: Tab[] = [
   { to: "/influencer/auth", label: "인증", icon: "verified_user" },
-  { to: "/influencer/samples", label: "Samples", icon: "storefront" },
+  { to: "/influencer/samples", label: "Discover", icon: "storefront" },
 ];
 const PROPOSAL_TAB: Tab = { to: "/influencer/proposal", label: "제안서", icon: "description" };
 

@@ -28,7 +28,7 @@ const StartupInbox = () => {
             </div>
             <p className="font-label-sm text-label-sm text-on-surface">아직 받은 역제안서가 없어요</p>
             <p className="text-caption text-on-surface-variant mt-1 max-w-[220px]">
-              인플루언서가 Samples에서 역제안서를 보내면 여기에 표시됩니다
+              인플루언서가 Discover에서 역제안서를 보내면 여기에 표시됩니다
             </p>
           </div>
         ) : (

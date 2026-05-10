@@ -27,7 +27,7 @@ const SamplesPage = () => {
 
   return (
     <div className="flex flex-col min-h-full bg-surface-container-low">
-      <MobileHeader title="Samples" view="influencer" subtitle="샘플 체험 후 콘텐츠 업로드" />
+      <MobileHeader title="Discover" view="influencer" subtitle="샘플 체험 후 콘텐츠 업로드" />
 
       {/* Category filter chips */}
       <div className="flex gap-2 overflow-x-auto px-4 py-3 -mb-1 shrink-0">

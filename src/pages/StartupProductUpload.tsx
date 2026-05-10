@@ -65,7 +65,7 @@ const StartupProductUpload = () => {
 
   return (
     <div className="flex flex-col min-h-full bg-surface-container-low">
-      <MobileHeader title="제품 등록" back view="brand" subtitle="Samples에 노출됩니다" />
+      <MobileHeader title="제품 등록" back view="brand" subtitle="Discover에 노출됩니다" />
 
       <main className="flex-1 px-4 py-4 pb-28 space-y-4">
         <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] p-4 space-y-4">
