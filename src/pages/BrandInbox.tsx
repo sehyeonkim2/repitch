@@ -35,20 +35,18 @@ const ProposalBody = ({ proposal }: { proposal: SubmittedProposal }) => {
   if (current) sections.push(current);
 
   return (
-    <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.07)] p-5">
-      <div className="border-b-2 border-on-surface pb-4 mb-5 text-center">
-        <h1 className="font-headline-md text-headline-md text-on-surface mb-1">
-          Re:Pitch 역제안서
-        </h1>
-        <p className="text-caption text-on-surface-variant">{title}</p>
+    <div className="bg-white rounded-xl shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-4">
+      <div className="border-b border-outline-variant pb-3 mb-3 text-center">
+        <h1 className="text-sm font-semibold text-on-surface">Re:Pitch 역제안서</h1>
+        {title && <p className="text-[11px] text-on-surface-variant mt-0.5">{title}</p>}
       </div>
-      <div className="space-y-5">
+      <div className="space-y-3">
         {sections.map((s) => (
           <section key={s.heading}>
-            <h3 className="font-label-sm text-label-sm text-primary mb-2 border-b border-surface-variant pb-1">
+            <h3 className="text-[11px] font-semibold text-primary mb-1 pb-0.5 border-b border-surface-variant">
               {s.heading}
             </h3>
-            <div className="font-body-md text-body-md text-on-surface leading-relaxed whitespace-pre-line">
+            <div className="text-[11px] text-on-surface leading-relaxed whitespace-pre-line">
               {s.body}
             </div>
           </section>
@@ -62,10 +60,12 @@ const SuccessModal = ({
   proposal,
   onClose,
   onCampaign,
+  onChat,
 }: {
   proposal: SubmittedProposal;
   onClose: () => void;
   onCampaign: () => void;
+  onChat: () => void;
 }) => (
   <motion.div
     initial={{ opacity: 0 }}
@@ -104,12 +104,15 @@ const SuccessModal = ({
           <span className="text-on-surface font-medium">{proposal.input.보수}</span>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-3 gap-2">
         <Button variant="ghost" fullWidth onClick={onClose}>
           닫기
         </Button>
+        <Button variant="secondary" fullWidth icon="chat_bubble" onClick={onChat}>
+          Chat
+        </Button>
         <Button variant="primary" fullWidth icon="analytics" onClick={onCampaign}>
-          캠페인 보기
+          캠페인
         </Button>
       </div>
     </motion.div>
@@ -139,7 +142,7 @@ const CollapsibleSection = ({ title, icon, defaultOpen = false, children }: Sect
           className={`!text-on-surface-variant transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
-      {open && <div className="px-4 pb-4 border-t border-outline-variant pt-4">{children}</div>}
+      {open && <div className="px-3 pb-3 border-t border-outline-variant/60 pt-3">{children}</div>}
     </Card>
   );
 };
@@ -147,8 +150,9 @@ const CollapsibleSection = ({ title, icon, defaultOpen = false, children }: Sect
 const BrandInbox = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getProposal } = useApp();
+  const { getProposal, createChatRoom } = useApp();
   const [decision, setDecision] = useState<Decision | null>(null);
+  const [chatRoomId, setChatRoomId] = useState<string | null>(null);
 
   const proposal = id ? getProposal(id) : null;
 
@@ -173,6 +177,26 @@ const BrandInbox = () => {
   }
 
   const inf = proposal.influencer;
+
+  const handleAccept = () => {
+    const roomId = createChatRoom(
+      proposal.id,
+      inf,
+      "역제안서를 검토했습니다. 협업 진행할게요! 궁금한 점이 있으면 편하게 말씀해 주세요 📩",
+    );
+    setChatRoomId(roomId);
+    setDecision("accept");
+  };
+
+  const handleNegotiate = () => {
+    const roomId = createChatRoom(
+      proposal.id,
+      inf,
+      "안녕하세요! 제안 내용에 대해 몇 가지 협의하고 싶습니다. 편하게 이야기해요 😊",
+    );
+    setChatRoomId(roomId);
+    setDecision("negotiate");
+  };
 
   return (
     <div className="flex flex-col min-h-full bg-surface-container-low">
@@ -266,14 +290,14 @@ const BrandInbox = () => {
           <Button variant="ghost" fullWidth onClick={() => setDecision("reject")}>
             거절
           </Button>
-          <Button variant="secondary" fullWidth onClick={() => setDecision("negotiate")}>
+          <Button variant="secondary" fullWidth onClick={handleNegotiate}>
             협의
           </Button>
           <Button
             variant="primary"
             fullWidth
             icon="check_circle"
-            onClick={() => setDecision("accept")}
+            onClick={handleAccept}
           >
             수락
           </Button>
@@ -286,6 +310,7 @@ const BrandInbox = () => {
             proposal={proposal}
             onClose={() => setDecision(null)}
             onCampaign={() => navigate(`/brand/campaign/${proposal.id}`)}
+            onChat={() => chatRoomId && navigate(`/brand/chat/${chatRoomId}`)}
           />
         )}
         {decision === "negotiate" && (
@@ -307,11 +332,24 @@ const BrandInbox = () => {
                 협의 요청을 보냈습니다
               </h2>
               <p className="font-body-md text-body-md text-on-surface-variant mb-md">
-                인플루언서에게 변경 사항 협의 메시지가 전송됩니다.
+                채팅방이 생성되었습니다. Chat 탭에서 인플루언서와 협의를 이어가세요.
               </p>
-              <Button variant="primary" fullWidth onClick={() => setDecision(null)}>
-                확인
-              </Button>
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="ghost" fullWidth onClick={() => setDecision(null)}>
+                  닫기
+                </Button>
+                <Button
+                  variant="primary"
+                  fullWidth
+                  icon="chat_bubble"
+                  onClick={() => {
+                    setDecision(null);
+                    if (chatRoomId) navigate(`/brand/chat/${chatRoomId}`);
+                  }}
+                >
+                  Chat 시작
+                </Button>
+              </div>
             </motion.div>
           </motion.div>
         )}

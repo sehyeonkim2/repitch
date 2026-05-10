@@ -31,7 +31,7 @@ const RoleSelect = () => (
           </div>
           <div className="flex-1 min-w-0">
             <div className="font-headline-md text-headline-md text-on-surface">
-              인플루언서
+              Influencer
             </div>
             <div className="font-label-sm text-label-sm text-on-surface-variant mt-0.5">
               인증부터 제안서 작성까지
@@ -54,10 +54,10 @@ const RoleSelect = () => (
           </div>
           <div className="flex-1 min-w-0">
             <div className="font-headline-md text-headline-md text-surface">
-              기업
+              Enterprise
             </div>
             <div className="font-label-sm text-label-sm text-surface/80 mt-0.5">
-              AI 매칭으로 인플루언서 찾기
+              AI 매칭으로 Influencer 찾기
             </div>
           </div>
           <Icon

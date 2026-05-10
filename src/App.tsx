@@ -8,6 +8,8 @@ import ProposalGenerator from "./pages/ProposalGenerator";
 import ProposalSent from "./pages/ProposalSent";
 import BrandInbox from "./pages/BrandInbox";
 import CampaignDashboard from "./pages/CampaignDashboard";
+import ChatList from "./pages/ChatList";
+import ChatRoom from "./pages/ChatRoom";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
             <Route path="/brand/matching" element={<MatchingDashboard />} />
             <Route path="/brand/inbox/:id" element={<BrandInbox />} />
             <Route path="/brand/campaign/:id" element={<CampaignDashboard />} />
+            <Route path="/brand/chat" element={<ChatList />} />
+            <Route path="/brand/chat/:id" element={<ChatRoom />} />
           </Routes>
         </MobileShell>
       </Router>

@@ -9,6 +9,7 @@ const INFLUENCER_TABS: Tab[] = [
 
 const BRAND_TABS: Tab[] = [
   { to: "/brand/matching", label: "매칭", icon: "groups" },
+  { to: "/brand/chat", label: "Chat", icon: "chat_bubble" },
 ];
 
 const HIDE_PATTERNS = [
