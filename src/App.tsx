@@ -16,6 +16,9 @@ import StudioPage from "./pages/StudioPage";
 import InfluencerChatList from "./pages/InfluencerChatList";
 import InfluencerChatRoom from "./pages/InfluencerChatRoom";
 import InfluencerProfile from "./pages/InfluencerProfile";
+import EnterpriseDashboard from "./pages/EnterpriseDashboard";
+import EnterpriseAdDetail from "./pages/EnterpriseAdDetail";
+import EnterpriseProfile from "./pages/EnterpriseProfile";
 import StartupHome from "./pages/StartupHome";
 import StartupProductUpload from "./pages/StartupProductUpload";
 import StartupInbox from "./pages/StartupInbox";
@@ -49,6 +52,9 @@ function App() {
             <Route path="/brand/campaign/:id" element={<CampaignDashboard />} />
             <Route path="/brand/chat" element={<ChatList />} />
             <Route path="/brand/chat/:id" element={<ChatRoom />} />
+            <Route path="/brand/dashboard" element={<EnterpriseDashboard />} />
+            <Route path="/brand/ad/:id" element={<EnterpriseAdDetail />} />
+            <Route path="/brand/profile" element={<EnterpriseProfile />} />
 
             {/* Startup */}
             <Route path="/startup/home" element={<StartupHome />} />

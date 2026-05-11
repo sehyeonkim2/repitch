@@ -12,7 +12,9 @@ const INFLUENCER_TABS: Tab[] = [
 
 const BRAND_TABS: Tab[] = [
   { to: "/brand/matching", label: "매칭", icon: "groups" },
+  { to: "/brand/dashboard", label: "Dashboard", icon: "bar_chart" },
   { to: "/brand/chat", label: "Chat", icon: "chat_bubble" },
+  { to: "/brand/profile", label: "프로필", icon: "person" },
 ];
 
 const STARTUP_TABS: Tab[] = [
@@ -28,6 +30,7 @@ const HIDE_PATTERNS = [
   /^\/influencer\/chat\/.+/,
   /^\/brand\/inbox\//,
   /^\/brand\/campaign\//,
+  /^\/brand\/ad\//,
   /^\/startup\/inbox\/.+/,
   /^\/startup\/chat\/.+/,
 ];

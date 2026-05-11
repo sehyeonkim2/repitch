@@ -331,20 +331,6 @@ const MatchingDashboard = () => {
       />
 
       <main className="flex-1 px-4 py-3 pb-24 space-y-3">
-        {/* Mode toggle: Enterprise / Startup */}
-        <div className="flex items-center gap-1 bg-surface-container-high rounded-full p-1 self-start">
-          <div className="px-4 py-1.5 rounded-full bg-on-surface text-surface text-xs font-medium">
-            Enterprise
-          </div>
-          <button
-            type="button"
-            onClick={() => navigate("/brand/startup")}
-            className="px-4 py-1.5 rounded-full text-on-surface-variant text-xs font-medium hover:text-on-surface transition-colors"
-          >
-            Startup
-          </button>
-        </div>
-
         {latestProposal && (
           <button
             type="button"
