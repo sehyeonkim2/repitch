@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
-type View = "influencer" | "brand";
+type View = "influencer" | "brand" | "startup";
 
 interface MobileHeaderProps {
   title: string;
@@ -17,6 +17,14 @@ const ViewChip = ({ view }: { view: View }) => {
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-on-surface text-surface text-[10px] font-semibold">
         <span className="material-symbols-outlined !text-[12px]">domain</span>
         Enterprise
+      </span>
+    );
+  }
+  if (view === "startup") {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-on-surface text-surface text-[10px] font-semibold">
+        <span className="material-symbols-outlined !text-[12px]">rocket_launch</span>
+        Startup
       </span>
     );
   }

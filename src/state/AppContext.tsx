@@ -10,6 +10,7 @@ import {
   defaultSampleProducts,
   type SampleProduct,
 } from "../data/sampleProducts";
+import { startupDummyProposals } from "../data/startupDummyData";
 
 export interface ChatMessage {
   id: string;
@@ -32,6 +33,8 @@ interface AppState {
   submittedProposals: Record<string, SubmittedProposal>;
   chatRooms: Record<string, ChatRoom>;
   sampleProducts: SampleProduct[];
+  startupInboxProposals: SubmittedProposal[];
+  startupChatRooms: Record<string, ChatRoom>;
   setAuthScore: (s: ScoreBreakdown | null) => void;
   selectInfluencer: (inf: MatchedInfluencer | null) => void;
   submitProposal: (proposal: SubmittedProposal) => void;
@@ -39,6 +42,9 @@ interface AppState {
   createChatRoom: (proposalId: string, influencer: Influencer, initialMsg: string) => string;
   sendMessage: (roomId: string, text: string, sender: "brand" | "influencer") => void;
   addSampleProduct: (product: Omit<SampleProduct, "id" | "createdAt">) => void;
+  createStartupChatRoom: (proposalId: string, influencer: Influencer, initialMsg: string) => string;
+  sendStartupMessage: (roomId: string, text: string, sender: "brand" | "influencer") => void;
+  getStartupProposal: (id: string) => SubmittedProposal | null;
 }
 
 const AppContext = createContext<AppState | null>(null);
@@ -52,6 +58,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   >({});
   const [chatRooms, setChatRooms] = useState<Record<string, ChatRoom>>({});
   const [sampleProducts, setSampleProducts] = useState<SampleProduct[]>(defaultSampleProducts);
+  const [startupInboxProposals] = useState<SubmittedProposal[]>(startupDummyProposals);
+  const [startupChatRooms, setStartupChatRooms] = useState<Record<string, ChatRoom>>({});
 
   const selectInfluencer = useCallback((inf: MatchedInfluencer | null) => {
     setSelectedInfluencer(inf);
@@ -115,6 +123,50 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     [],
   );
 
+  const createStartupChatRoom = useCallback(
+    (proposalId: string, influencer: Influencer, initialMsg: string): string => {
+      const roomId = `startup_chat_${proposalId}`;
+      const now = new Date().toISOString();
+      setStartupChatRooms((prev) => {
+        if (prev[roomId]) return prev;
+        const room: ChatRoom = {
+          id: roomId,
+          influencer,
+          proposalId,
+          createdAt: now,
+          messages: [
+            { id: "msg_0", text: initialMsg, sender: "influencer", timestamp: now },
+          ],
+        };
+        return { ...prev, [roomId]: room };
+      });
+      return roomId;
+    },
+    [],
+  );
+
+  const sendStartupMessage = useCallback(
+    (roomId: string, text: string, sender: "brand" | "influencer") => {
+      setStartupChatRooms((prev) => {
+        const room = prev[roomId];
+        if (!room) return prev;
+        const msg: ChatMessage = {
+          id: `msg_${Date.now()}`,
+          text,
+          sender,
+          timestamp: new Date().toISOString(),
+        };
+        return { ...prev, [roomId]: { ...room, messages: [...room.messages, msg] } };
+      });
+    },
+    [],
+  );
+
+  const getStartupProposal = useCallback(
+    (id: string) => startupInboxProposals.find((p) => p.id === id) ?? null,
+    [startupInboxProposals],
+  );
+
   const value = useMemo<AppState>(
     () => ({
       authScore,
@@ -122,6 +174,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       submittedProposals,
       chatRooms,
       sampleProducts,
+      startupInboxProposals,
+      startupChatRooms,
       setAuthScore,
       selectInfluencer,
       submitProposal,
@@ -129,6 +183,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       createChatRoom,
       sendMessage,
       addSampleProduct,
+      createStartupChatRoom,
+      sendStartupMessage,
+      getStartupProposal,
     }),
     [
       authScore,
@@ -136,12 +193,17 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       submittedProposals,
       chatRooms,
       sampleProducts,
+      startupInboxProposals,
+      startupChatRooms,
       selectInfluencer,
       submitProposal,
       getProposal,
       createChatRoom,
       sendMessage,
       addSampleProduct,
+      createStartupChatRoom,
+      sendStartupMessage,
+      getStartupProposal,
     ],
   );
 

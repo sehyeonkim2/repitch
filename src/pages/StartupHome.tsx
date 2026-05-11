@@ -6,70 +6,56 @@ import { useApp } from "../state/AppContext";
 
 const FEATURES = [
   {
-    to: "/brand/startup/upload",
+    to: "/startup/upload",
     icon: "add_box",
     label: "제품 올리기",
     desc: "샘플 제품을 등록하고\n인플루언서에게 노출",
     color: "#e8f4ff",
   },
   {
-    to: "/brand/startup/inbox",
+    to: "/startup/inbox",
     icon: "inbox",
     label: "역제안서 수령함",
     desc: "인플루언서가 보낸\n역제안서 확인 및 응답",
     color: "#f0ffe8",
   },
   {
-    to: "/brand/chat",
+    to: "/startup/chat",
     icon: "chat_bubble",
     label: "채팅",
     desc: "매칭된 인플루언서와\n1:1 메시지",
     color: "#fff8e8",
   },
-  {
-    to: "/brand/startup/send",
-    icon: "send",
-    label: "역제안서 보내기",
-    desc: "특정 인플루언서에게\n직접 제안서 발송",
-    color: "#f8e8ff",
-  },
 ];
 
 const StartupHome = () => {
   const navigate = useNavigate();
-  const { sampleProducts, submittedProposals } = useApp();
-  const proposalCount = Object.keys(submittedProposals).length;
+  const { sampleProducts, startupInboxProposals, startupChatRooms } = useApp();
+  const proposalCount = startupInboxProposals.length;
+  const chatCount = Object.keys(startupChatRooms).length;
 
   return (
     <div className="flex flex-col min-h-full bg-surface-container-low">
-      <MobileHeader
-        title="Startup 모드"
-        view="brand"
-        right={
-          <button
-            type="button"
-            onClick={() => navigate("/brand/matching")}
-            className="text-[11px] font-medium text-on-surface-variant bg-surface-container-low border border-outline-variant rounded-full px-3 py-1.5"
-          >
-            Enterprise 전환
-          </button>
-        }
-      />
+      <MobileHeader title="Startup 홈" view="startup" />
 
       <main className="flex-1 px-4 py-4 pb-24 space-y-4">
         {/* Stats row */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] p-4 text-center">
             <div className="text-2xl font-bold text-on-surface">{sampleProducts.length}</div>
-            <div className="text-caption text-on-surface-variant mt-0.5">등록된 제품</div>
+            <div className="text-[10px] text-on-surface-variant mt-0.5">등록 제품</div>
           </div>
           <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] p-4 text-center">
             <div className="text-2xl font-bold text-on-surface">{proposalCount}</div>
-            <div className="text-caption text-on-surface-variant mt-0.5">받은 역제안서</div>
+            <div className="text-[10px] text-on-surface-variant mt-0.5">받은 역제안</div>
+          </div>
+          <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] p-4 text-center">
+            <div className="text-2xl font-bold text-on-surface">{chatCount}</div>
+            <div className="text-[10px] text-on-surface-variant mt-0.5">진행 채팅</div>
           </div>
         </div>
 
-        {/* Feature cards 2×2 */}
+        {/* Feature cards */}
         <div className="grid grid-cols-2 gap-3">
           {FEATURES.map((f, i) => (
             <motion.button
@@ -93,6 +79,24 @@ const StartupHome = () => {
               </div>
             </motion.button>
           ))}
+
+          {/* 제품 등록 바로가기 */}
+          <motion.button
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.18 }}
+            type="button"
+            onClick={() => navigate("/startup/upload")}
+            className="bg-on-surface rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-4 text-left active:scale-[0.97] transition-all"
+          >
+            <div className="w-10 h-10 rounded-xl bg-surface/20 flex items-center justify-center mb-3">
+              <Icon name="add_circle" size={22} className="!text-surface" />
+            </div>
+            <div className="font-label-sm text-label-sm text-surface mb-1">제품 등록</div>
+            <div className="text-[11px] text-surface/70 leading-relaxed">
+              새 제품을 등록하고{"\n"}Discover에 노출
+            </div>
+          </motion.button>
         </div>
 
         {/* Registered products preview */}
@@ -102,7 +106,7 @@ const StartupHome = () => {
               <span className="font-label-sm text-label-sm text-on-surface">등록 제품</span>
               <button
                 type="button"
-                onClick={() => navigate("/brand/startup/upload")}
+                onClick={() => navigate("/startup/upload")}
                 className="text-caption text-primary font-medium"
               >
                 + 추가

@@ -1,13 +1,14 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { useApp } from "../state/AppContext";
 
 type Tab = { to: string; end?: boolean; label: string; icon: string };
 
-const INFLUENCER_TABS_BASE: Tab[] = [
-  { to: "/influencer/auth", label: "인증", icon: "verified_user" },
-  { to: "/influencer/samples", label: "Discover", icon: "storefront" },
+const INFLUENCER_TABS: Tab[] = [
+  { to: "/influencer/auth", end: true, label: "홈", icon: "home" },
+  { to: "/influencer/samples", label: "Samples", icon: "storefront" },
+  { to: "/influencer/studio", label: "Studio", icon: "auto_awesome" },
+  { to: "/influencer/chat", label: "Chat", icon: "chat_bubble" },
+  { to: "/influencer/profile", label: "프로필", icon: "person" },
 ];
-const PROPOSAL_TAB: Tab = { to: "/influencer/proposal", label: "제안서", icon: "description" };
 
 const BRAND_TABS: Tab[] = [
   { to: "/brand/matching", label: "매칭", icon: "groups" },
@@ -15,32 +16,30 @@ const BRAND_TABS: Tab[] = [
 ];
 
 const STARTUP_TABS: Tab[] = [
-  { to: "/brand/startup", end: true, label: "홈", icon: "home" },
-  { to: "/brand/startup/upload", label: "제품등록", icon: "add_box" },
-  { to: "/brand/startup/inbox", label: "수령함", icon: "inbox" },
-  { to: "/brand/chat", label: "Chat", icon: "chat_bubble" },
+  { to: "/startup/home", end: true, label: "홈", icon: "home" },
+  { to: "/startup/inbox", label: "수령함", icon: "inbox" },
+  { to: "/startup/chat", label: "Chat", icon: "chat_bubble" },
+  { to: "/startup/profile", label: "프로필", icon: "person" },
 ];
 
 const HIDE_PATTERNS = [
   /^\/$/,
   /^\/influencer\/proposal\/sent\//,
+  /^\/influencer\/chat\/.+/,
   /^\/brand\/inbox\//,
   /^\/brand\/campaign\//,
+  /^\/startup\/inbox\/.+/,
+  /^\/startup\/chat\/.+/,
 ];
 
 export const BottomTabBar = () => {
   const { pathname } = useLocation();
-  const { authScore } = useApp();
   if (HIDE_PATTERNS.some((re) => re.test(pathname))) return null;
-
-  const isAuthDone = authScore !== null && authScore.total > 0;
 
   let tabs: Tab[];
   if (pathname.startsWith("/influencer")) {
-    tabs = isAuthDone
-      ? [...INFLUENCER_TABS_BASE, PROPOSAL_TAB]
-      : INFLUENCER_TABS_BASE;
-  } else if (pathname.startsWith("/brand/startup")) {
+    tabs = INFLUENCER_TABS;
+  } else if (pathname.startsWith("/startup")) {
     tabs = STARTUP_TABS;
   } else if (pathname.startsWith("/brand")) {
     tabs = BRAND_TABS;
