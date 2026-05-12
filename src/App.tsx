@@ -19,6 +19,7 @@ import InfluencerProfile from "./pages/InfluencerProfile";
 import EnterpriseDashboard from "./pages/EnterpriseDashboard";
 import EnterpriseAdDetail from "./pages/EnterpriseAdDetail";
 import EnterpriseProfile from "./pages/EnterpriseProfile";
+import InfluencerHome from "./pages/InfluencerHome";
 import StartupHome from "./pages/StartupHome";
 import StartupProductUpload from "./pages/StartupProductUpload";
 import StartupInbox from "./pages/StartupInbox";
@@ -37,6 +38,7 @@ function App() {
             <Route path="/" element={<RoleSelect />} />
 
             {/* Influencer */}
+            <Route path="/influencer/home" element={<InfluencerHome />} />
             <Route path="/influencer/auth" element={<AuthDashboard />} />
             <Route path="/influencer/proposal" element={<ProposalGenerator />} />
             <Route path="/influencer/proposal/sent/:id" element={<ProposalSent />} />

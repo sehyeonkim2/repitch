@@ -9,7 +9,7 @@ import type { Category } from "../data/types";
 import type { SampleProduct } from "../data/sampleProducts";
 
 const HomeBtn = () => (
-  <Link to="/startup/home" aria-label="홈" className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant">
+  <Link to="/" aria-label="홈" className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant">
     <Icon name="home" size={22} />
   </Link>
 );

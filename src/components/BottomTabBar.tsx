@@ -3,7 +3,7 @@ import { NavLink, useLocation } from "react-router-dom";
 type Tab = { to: string; end?: boolean; label: string; icon: string };
 
 const INFLUENCER_TABS: Tab[] = [
-  { to: "/influencer/auth", end: true, label: "홈", icon: "home" },
+  { to: "/influencer/home", end: true, label: "홈", icon: "home" },
   { to: "/influencer/samples", label: "Samples", icon: "storefront" },
   { to: "/influencer/studio", label: "Studio", icon: "auto_awesome" },
   { to: "/influencer/chat", label: "Chat", icon: "chat_bubble" },
@@ -18,7 +18,7 @@ const BRAND_TABS: Tab[] = [
 ];
 
 const STARTUP_TABS: Tab[] = [
-  { to: "/startup/home", end: true, label: "홈", icon: "home" },
+  { to: "/", end: true, label: "홈", icon: "home" },
   { to: "/startup/inbox", label: "수령함", icon: "inbox" },
   { to: "/startup/chat", label: "Chat", icon: "chat_bubble" },
   { to: "/startup/profile", label: "프로필", icon: "person" },
