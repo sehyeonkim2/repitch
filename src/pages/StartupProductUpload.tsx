@@ -1,10 +1,17 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MobileHeader } from "../components/MobileHeader";
 import { StickyAction } from "../components/StickyAction";
 import { Button } from "../components/Button";
 import { useApp } from "../state/AppContext";
+import { Icon } from "../components/Icon";
 import type { Category } from "../data/types";
+
+const HomeBtn = () => (
+  <Link to="/startup/home" aria-label="홈" className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant">
+    <Icon name="home" size={22} />
+  </Link>
+);
 
 const CATEGORIES: Category[] = [
   "뷰티", "패션", "식품", "헬스·피트니스", "라이프스타일", "전자기기", "앱서비스",
@@ -67,9 +74,10 @@ const StartupProductUpload = () => {
     <div className="flex flex-col min-h-full bg-surface-container-low">
       <MobileHeader
         title="제품 등록"
-        back={() => navigate("/startup/home")}
+        back={() => navigate(-1)}
         view="startup"
         subtitle="Discover에 노출됩니다"
+        right={<HomeBtn />}
       />
 
       <main className="flex-1 px-4 py-4 pb-28 space-y-4">

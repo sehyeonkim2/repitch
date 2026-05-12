@@ -1,10 +1,16 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MobileHeader } from "../components/MobileHeader";
 import { Icon } from "../components/Icon";
 import { useApp } from "../state/AppContext";
 
+const HomeBtn = () => (
+  <Link to="/startup/home" aria-label="홈" className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant">
+    <Icon name="home" size={22} />
+  </Link>
+);
+
 const MENU_ITEMS = [
-  { icon: "inventory_2", label: "등록 제품 관리", to: "/startup/upload" },
+  { icon: "inventory_2", label: "등록 제품 관리", to: "/startup/products" },
   { icon: "inbox", label: "역제안서 수령함", to: "/startup/inbox" },
   { icon: "chat_bubble", label: "채팅", to: "/startup/chat" },
   { icon: "help_outline", label: "도움말 & 문의", to: null },
@@ -17,7 +23,7 @@ const StartupProfile = () => {
 
   return (
     <div className="flex flex-col min-h-full bg-surface-container-low">
-      <MobileHeader title="프로필" view="startup" />
+      <MobileHeader title="프로필" view="startup" right={<HomeBtn />} />
 
       <main className="flex-1 px-4 py-4 pb-24 space-y-4">
         {/* Profile card */}

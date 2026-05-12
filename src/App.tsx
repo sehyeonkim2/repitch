@@ -26,6 +26,7 @@ import StartupInboxDetail from "./pages/StartupInboxDetail";
 import StartupChatList from "./pages/StartupChatList";
 import StartupChatRoom from "./pages/StartupChatRoom";
 import StartupProfile from "./pages/StartupProfile";
+import StartupProductList from "./pages/StartupProductList";
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
             <Route path="/startup/inbox/:id" element={<StartupInboxDetail />} />
             <Route path="/startup/chat" element={<StartupChatList />} />
             <Route path="/startup/chat/:id" element={<StartupChatRoom />} />
+            <Route path="/startup/products" element={<StartupProductList />} />
             <Route path="/startup/profile" element={<StartupProfile />} />
           </Routes>
         </MobileShell>

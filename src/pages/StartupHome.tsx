@@ -113,7 +113,7 @@ const StartupHome = () => {
               </button>
             </div>
             <div className="space-y-2">
-              {sampleProducts.slice(0, 3).map((p) => (
+              {sampleProducts.slice(0, 4).map((p) => (
                 <div key={p.id} className="flex items-center gap-3">
                   <div
                     className="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center text-[10px] font-bold text-on-surface/30"

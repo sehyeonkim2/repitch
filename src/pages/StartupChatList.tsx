@@ -1,8 +1,14 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MobileHeader } from "../components/MobileHeader";
 import { Icon } from "../components/Icon";
 import { useApp } from "../state/AppContext";
+
+const HomeBtn = () => (
+  <Link to="/startup/home" aria-label="홈" className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant">
+    <Icon name="home" size={22} />
+  </Link>
+);
 
 const StartupChatList = () => {
   const navigate = useNavigate();
@@ -13,7 +19,7 @@ const StartupChatList = () => {
 
   return (
     <div className="flex flex-col min-h-full bg-surface-container-low">
-      <MobileHeader title="Chat" view="startup" />
+      <MobileHeader title="Chat" view="startup" right={<HomeBtn />} />
       <main className="flex-1 px-4 py-3 pb-24">
         {rooms.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">

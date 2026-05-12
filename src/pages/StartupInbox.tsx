@@ -1,8 +1,14 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MobileHeader } from "../components/MobileHeader";
 import { Icon } from "../components/Icon";
 import { useApp } from "../state/AppContext";
+
+const HomeBtn = () => (
+  <Link to="/startup/home" aria-label="홈" className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant">
+    <Icon name="home" size={22} />
+  </Link>
+);
 
 const StartupInbox = () => {
   const navigate = useNavigate();
@@ -17,6 +23,7 @@ const StartupInbox = () => {
         title="역제안서 수령함"
         view="startup"
         subtitle={`총 ${proposals.length}건`}
+        right={<HomeBtn />}
       />
 
       <main className="flex-1 px-4 py-3 pb-24">

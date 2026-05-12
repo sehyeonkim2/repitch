@@ -42,6 +42,8 @@ interface AppState {
   createChatRoom: (proposalId: string, influencer: Influencer, initialMsg: string) => string;
   sendMessage: (roomId: string, text: string, sender: "brand" | "influencer") => void;
   addSampleProduct: (product: Omit<SampleProduct, "id" | "createdAt">) => void;
+  removeSampleProduct: (id: string) => void;
+  updateSampleProduct: (id: string, updates: Partial<Omit<SampleProduct, "id" | "createdAt">>) => void;
   createStartupChatRoom: (proposalId: string, influencer: Influencer, initialMsg: string) => string;
   sendStartupMessage: (roomId: string, text: string, sender: "brand" | "influencer") => void;
   getStartupProposal: (id: string) => SubmittedProposal | null;
@@ -99,9 +101,22 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const addSampleProduct = useCallback(
     (product: Omit<SampleProduct, "id" | "createdAt">) => {
       setSampleProducts((prev) => [
-        ...prev,
         { ...product, id: `sp_${Date.now()}`, createdAt: new Date().toISOString() },
+        ...prev,
       ]);
+    },
+    [],
+  );
+
+  const removeSampleProduct = useCallback((id: string) => {
+    setSampleProducts((prev) => prev.filter((p) => p.id !== id));
+  }, []);
+
+  const updateSampleProduct = useCallback(
+    (id: string, updates: Partial<Omit<SampleProduct, "id" | "createdAt">>) => {
+      setSampleProducts((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, ...updates } : p)),
+      );
     },
     [],
   );
@@ -183,6 +198,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       createChatRoom,
       sendMessage,
       addSampleProduct,
+      removeSampleProduct,
+      updateSampleProduct,
       createStartupChatRoom,
       sendStartupMessage,
       getStartupProposal,
@@ -201,6 +218,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       createChatRoom,
       sendMessage,
       addSampleProduct,
+      removeSampleProduct,
+      updateSampleProduct,
       createStartupChatRoom,
       sendStartupMessage,
       getStartupProposal,

@@ -1,9 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { MobileHeader } from "../components/MobileHeader";
 import { Icon } from "../components/Icon";
 import { useApp } from "../state/AppContext";
+
+const HomeBtn = () => (
+  <Link to="/startup/home" aria-label="홈" className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant">
+    <Icon name="home" size={22} />
+  </Link>
+);
 
 const StartupChatRoom = () => {
   const { id } = useParams<{ id: string }>();
@@ -43,6 +49,7 @@ const StartupChatRoom = () => {
         back={() => navigate("/startup/chat")}
         view="startup"
         subtitle={room.influencer.bio}
+        right={<HomeBtn />}
       />
 
       <main className="flex-1 px-4 py-4 pb-24 space-y-3">

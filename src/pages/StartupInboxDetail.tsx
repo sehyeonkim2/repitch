@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { MobileHeader } from "../components/MobileHeader";
 import { StickyAction } from "../components/StickyAction";
@@ -9,6 +9,12 @@ import { Button } from "../components/Button";
 import { Icon } from "../components/Icon";
 import { useApp } from "../state/AppContext";
 import type { SubmittedProposal } from "../data/types";
+
+const HomeBtn = () => (
+  <Link to="/startup/home" aria-label="홈" className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant">
+    <Icon name="home" size={22} />
+  </Link>
+);
 
 type Decision = "accept" | "negotiate" | "reject";
 
@@ -142,6 +148,7 @@ const StartupInboxDetail = () => {
         back={() => navigate("/startup/inbox")}
         view="startup"
         subtitle={`${new Date(proposal.createdAt).toLocaleDateString("ko-KR")}`}
+        right={<HomeBtn />}
       />
 
       <main className="flex-1 px-4 py-4 pb-24 space-y-3">

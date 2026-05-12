@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MobileHeader } from "../components/MobileHeader";
 import { StickyAction } from "../components/StickyAction";
 import { Card } from "../components/Card";
-import { Badge } from "../components/Badge";
 import { Button } from "../components/Button";
 import { Icon } from "../components/Icon";
 import { brands } from "../data/brands";
@@ -348,9 +347,14 @@ const ProposalGenerator = () => {
           view="influencer"
           right={
             generating ? <TypingDots /> : (
-              <Badge variant="secondary" icon="check_circle">
+              <button
+                type="button"
+                onClick={() => navigate("/influencer/auth")}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-secondary text-on-secondary text-[12px] font-medium"
+              >
+                <Icon name="check_circle" size={14} />
                 완료
-              </Badge>
+              </button>
             )
           }
         />
@@ -498,6 +502,16 @@ const ProposalGenerator = () => {
         back={handleBack}
         view="influencer"
         subtitle={STEP_TITLES[step - 1]}
+        right={
+          <button
+            type="button"
+            onClick={() => navigate("/influencer/auth")}
+            className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant"
+            aria-label="홈"
+          >
+            <Icon name="home" size={22} />
+          </button>
+        }
       />
 
       {/* Step indicator */}
