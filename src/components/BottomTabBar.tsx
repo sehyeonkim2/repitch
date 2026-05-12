@@ -18,7 +18,7 @@ const BRAND_TABS: Tab[] = [
 ];
 
 const STARTUP_TABS: Tab[] = [
-  { to: "/", end: true, label: "홈", icon: "home" },
+  { to: "/startup/home", end: true, label: "홈", icon: "home" },
   { to: "/startup/inbox", label: "수령함", icon: "inbox" },
   { to: "/startup/chat", label: "Chat", icon: "chat_bubble" },
   { to: "/startup/profile", label: "프로필", icon: "person" },

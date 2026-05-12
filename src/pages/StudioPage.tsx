@@ -60,6 +60,7 @@ const StudioPage = () => {
   const [plans, setPlans] = useState<ReelsPlan[]>(SAMPLE_PLANS);
   const [sendModalPlanId, setSendModalPlanId] = useState<string | null>(null);
   const [sentPlanId, setSentPlanId] = useState<string | null>(null);
+  const [regeneratingIds, setRegeneratingIds] = useState<Set<string>>(new Set());
 
   const matchedBrands = Object.values(submittedProposals).map((p) => p.brand);
   const hasMatches = matchedBrands.length > 0;
@@ -79,6 +80,22 @@ const StudioPage = () => {
     setSendModalPlanId(null);
     setSentPlanId(planId);
     setTimeout(() => setSentPlanId(null), 2500);
+  };
+
+  const handleRegenerate = (planId: string) => {
+    setRegeneratingIds((prev) => new Set([...prev, planId]));
+    setTimeout(() => {
+      setPlans((prev) =>
+        prev.map((p) =>
+          p.id === planId ? { ...p, id: `${planId}_r${Date.now()}` } : p,
+        ),
+      );
+      setRegeneratingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(planId);
+        return next;
+      });
+    }, 1400);
   };
 
   return (
@@ -232,15 +249,26 @@ const StudioPage = () => {
                   </p>
                 </div>
 
-                {/* ③ 기업에게 보내기 */}
-                <Button
-                  variant="secondary"
-                  fullWidth
-                  icon="send"
-                  onClick={() => setSendModalPlanId(plan.id)}
-                >
-                  기업에게 보내기
-                </Button>
+                {/* ③ 액션 버튼 */}
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    variant="ghost"
+                    fullWidth
+                    icon={regeneratingIds.has(plan.id) ? "progress_activity" : "refresh"}
+                    disabled={regeneratingIds.has(plan.id)}
+                    onClick={() => handleRegenerate(plan.id)}
+                  >
+                    {regeneratingIds.has(plan.id) ? "생성 중…" : "다시 출력하기"}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    fullWidth
+                    icon="send"
+                    onClick={() => setSendModalPlanId(plan.id)}
+                  >
+                    기업에게 전송
+                  </Button>
+                </div>
 
                 {sentPlanId === plan.id && (
                   <motion.p

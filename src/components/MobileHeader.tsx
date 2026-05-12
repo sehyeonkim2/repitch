@@ -11,7 +11,7 @@ interface MobileHeaderProps {
   subtitle?: string;
 }
 
-const ViewChip = ({ view }: { view: View }) => {
+const ViewChip = ({ view, onClick }: { view: View; onClick?: () => void }) => {
   if (view === "brand") {
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-on-surface text-surface text-[10px] font-semibold">
@@ -22,10 +22,14 @@ const ViewChip = ({ view }: { view: View }) => {
   }
   if (view === "startup") {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-on-surface text-surface text-[10px] font-semibold">
+      <button
+        type="button"
+        onClick={onClick}
+        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-on-surface text-surface text-[10px] font-semibold active:opacity-60 transition-opacity"
+      >
         <span className="material-symbols-outlined !text-[12px]">rocket_launch</span>
         Startup
-      </span>
+      </button>
     );
   }
   return (
@@ -64,7 +68,12 @@ export const MobileHeader = ({ title, back, view, right, subtitle }: MobileHeade
             <p className="text-caption text-on-surface-variant truncate -mt-0.5">{subtitle}</p>
           )}
         </div>
-        {view && <ViewChip view={view} />}
+        {view && (
+          <ViewChip
+            view={view}
+            onClick={view === "startup" ? () => navigate("/") : undefined}
+          />
+        )}
         {right && <div className="flex items-center gap-1">{right}</div>}
       </div>
     </header>
