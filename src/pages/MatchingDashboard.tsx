@@ -124,7 +124,7 @@ const InfluencerCard = ({
             <h3 className="font-label-sm text-label-sm text-on-surface flex items-center gap-1 truncate">
               @{inf.handle}
               {inf.verified && (
-                <Icon name="verified" filled className="!text-secondary" size={14} />
+                <Icon name="verified" filled className="!text-primary" size={14} />
               )}
             </h3>
             <p className="text-caption text-on-surface-variant truncate">{inf.bio}</p>
@@ -155,7 +155,7 @@ const InfluencerCard = ({
           <div className="mb-3 space-y-1">
             {inf.reasons.slice(0, 3).map((r) => (
               <div key={r} className="flex items-start gap-2 text-caption text-on-surface-variant">
-                <Icon name="check_circle" filled className="!text-secondary mt-0.5 shrink-0" size={14} />
+                <Icon name="check_circle" filled className="!text-primary mt-0.5 shrink-0" size={14} />
                 <span>{r}</span>
               </div>
             ))}
@@ -446,7 +446,7 @@ const MatchingDashboard = () => {
             className="absolute left-4 right-4 bottom-20 z-40 pointer-events-none"
           >
             <div className="mx-auto max-w-[28rem] bg-on-surface text-surface px-4 py-3 rounded-xl shadow-lg flex items-center gap-2">
-              <Icon name="check_circle" size={20} className="!text-secondary shrink-0" />
+              <Icon name="check_circle" size={20} className="!text-primary shrink-0" />
               <span className="font-label-sm text-label-sm">{toast}</span>
             </div>
           </motion.div>

@@ -142,7 +142,7 @@ const InfluencerHome = () => {
           </div>
           {isAuthed ? (
             <div className="flex items-center gap-1.5 shrink-0">
-              <Icon name="check_circle" size={18} filled className="!text-secondary" />
+              <Icon name="check_circle" size={18} filled className="!text-primary" />
               <Icon name="chevron_right" size={16} className="!text-on-surface-variant/50" />
             </div>
           ) : (
@@ -362,7 +362,7 @@ const InfluencerHome = () => {
                       </button>
                     ) : (
                       <div className="w-full bg-surface-container-low rounded-2xl py-4 flex items-center justify-center gap-2 border border-outline-variant">
-                        <Icon name="check_circle" size={16} filled className="!text-secondary" />
+                        <Icon name="check_circle" size={16} filled className="!text-primary" />
                         <span className="text-[12px] text-on-surface-variant font-medium">신청 완료</span>
                       </div>
                     )}

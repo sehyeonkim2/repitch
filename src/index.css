@@ -9,11 +9,11 @@
 }
 
 @theme {
-  /* === Colors (pure mono, matching the logo wordmark) === */
-  --color-primary: #000000;
+  /* === Colors === */
+  --color-primary: #5B6EF5;
   --color-on-primary: #ffffff;
-  --color-primary-container: #f0f0f0;
-  --color-on-primary-container: #000000;
+  --color-primary-container: #ECEEFE;
+  --color-on-primary-container: #1a237e;
   --color-primary-fixed: #ebebeb;
   --color-primary-fixed-dim: #d4d4d4;
   --color-on-primary-fixed: #000000;

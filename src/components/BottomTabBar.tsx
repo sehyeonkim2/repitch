@@ -63,7 +63,7 @@ export const BottomTabBar = () => {
               end={tab.end}
               className={({ isActive }) =>
                 `flex flex-col items-center justify-center gap-0.5 h-full rounded-2xl transition-all ${
-                  isActive ? "text-surface" : "text-surface/50"
+                  isActive ? "text-primary" : "text-surface/50"
                 }`
               }
             >

@@ -166,7 +166,7 @@ const StartupInboxDetail = () => {
               <h3 className="font-label-sm text-label-sm text-on-surface flex items-center gap-1">
                 @{inf.handle}
                 {inf.verified && (
-                  <Icon name="verified" filled className="!text-secondary" size={14} />
+                  <Icon name="verified" filled className="!text-primary" size={14} />
                 )}
               </h3>
               <p className="text-caption text-on-surface-variant truncate">{inf.bio}</p>
@@ -255,8 +255,8 @@ const StartupInboxDetail = () => {
               exit={{ scale: 0.9, opacity: 0 }}
               className="bg-white rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.18)] max-w-[28rem] w-full p-lg text-center"
             >
-              <div className="w-16 h-16 mx-auto rounded-full bg-secondary-container/40 border-2 border-secondary flex items-center justify-center mb-md">
-                <Icon name="celebration" filled className="!text-secondary" size={32} />
+              <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center mb-md">
+                <Icon name="celebration" filled className="!text-primary" size={32} />
               </div>
               <h2 className="font-headline-md text-headline-md text-on-surface mb-2">
                 수락했습니다!

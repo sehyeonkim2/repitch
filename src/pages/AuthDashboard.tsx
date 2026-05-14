@@ -289,7 +289,7 @@ const AuthDashboard = () => {
                   </p>
                 </div>
                 {s === "done" && (
-                  <Icon name="check_circle" filled className="!text-secondary" />
+                  <Icon name="check_circle" filled className="!text-primary" />
                 )}
               </div>
               <p className="font-body-md text-body-md text-on-surface-variant mb-3">

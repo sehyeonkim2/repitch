@@ -115,7 +115,7 @@ const RadioChips = <T extends string>({ options, value, onChange, name }: RadioC
         key={o}
         className={`flex items-center cursor-pointer px-4 py-2 rounded-lg border transition-colors ${
           value === o
-            ? "border-primary bg-primary-fixed text-on-primary-fixed-variant"
+            ? "border-primary bg-primary/10 text-on-surface"
             : "border-outline-variant bg-surface-container-low text-on-surface-variant active:border-primary"
         }`}
       >
@@ -350,7 +350,7 @@ const ProposalGenerator = () => {
               <button
                 type="button"
                 onClick={() => navigate("/influencer/auth")}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-secondary text-on-secondary text-[12px] font-medium"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary text-on-primary text-[12px] font-medium"
               >
                 <Icon name="check_circle" size={14} />
                 완료
