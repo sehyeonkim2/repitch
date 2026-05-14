@@ -35,6 +35,7 @@ interface AppState {
   sampleProducts: SampleProduct[];
   startupInboxProposals: SubmittedProposal[];
   startupChatRooms: Record<string, ChatRoom>;
+  productSampleRequests: Record<string, boolean>;
   setAuthScore: (s: ScoreBreakdown | null) => void;
   selectInfluencer: (inf: MatchedInfluencer | null) => void;
   submitProposal: (proposal: SubmittedProposal) => void;
@@ -47,6 +48,7 @@ interface AppState {
   createStartupChatRoom: (proposalId: string, influencer: Influencer, initialMsg: string) => string;
   sendStartupMessage: (roomId: string, text: string, sender: "brand" | "influencer") => void;
   getStartupProposal: (id: string) => SubmittedProposal | null;
+  requestProductSample: (proposalId: string) => void;
 }
 
 const AppContext = createContext<AppState | null>(null);
@@ -62,6 +64,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [sampleProducts, setSampleProducts] = useState<SampleProduct[]>(defaultSampleProducts);
   const [startupInboxProposals] = useState<SubmittedProposal[]>(startupDummyProposals);
   const [startupChatRooms, setStartupChatRooms] = useState<Record<string, ChatRoom>>({});
+  const [productSampleRequests, setProductSampleRequests] = useState<Record<string, boolean>>({});
 
   const selectInfluencer = useCallback((inf: MatchedInfluencer | null) => {
     setSelectedInfluencer(inf);
@@ -182,6 +185,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     [startupInboxProposals],
   );
 
+  const requestProductSample = useCallback((proposalId: string) => {
+    setProductSampleRequests((prev) => ({ ...prev, [proposalId]: true }));
+  }, []);
+
   const value = useMemo<AppState>(
     () => ({
       authScore,
@@ -191,6 +198,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       sampleProducts,
       startupInboxProposals,
       startupChatRooms,
+      productSampleRequests,
       setAuthScore,
       selectInfluencer,
       submitProposal,
@@ -203,6 +211,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       createStartupChatRoom,
       sendStartupMessage,
       getStartupProposal,
+      requestProductSample,
     }),
     [
       authScore,
@@ -212,6 +221,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       sampleProducts,
       startupInboxProposals,
       startupChatRooms,
+      productSampleRequests,
       selectInfluencer,
       submitProposal,
       getProposal,
@@ -223,6 +233,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       createStartupChatRoom,
       sendStartupMessage,
       getStartupProposal,
+      requestProductSample,
     ],
   );
 
