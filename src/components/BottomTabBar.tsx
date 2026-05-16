@@ -31,6 +31,7 @@ const HIDE_PATTERNS = [
   /^\/brand\/inbox\//,
   /^\/brand\/campaign\//,
   /^\/brand\/ad\//,
+  /^\/brand\/chat\/.+/,
   /^\/startup\/inbox\/.+/,
   /^\/startup\/chat\/.+/,
 ];
