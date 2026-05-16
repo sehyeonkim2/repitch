@@ -50,7 +50,7 @@ export const rankInfluencers = (
       브랜드_인플루언서_적합도: e.브랜드_인플루언서_적합도,
       matchScore: Math.round(e.매칭스코어 * 100),
       reasons: e.추천이유,
-      estimatedReach: e.예상도달수,
+      estimatedReach: Math.round(inf.followers * (e.예상도달률 / 100)),
       estimatedCtr: e.예상전환율,
     });
   }
